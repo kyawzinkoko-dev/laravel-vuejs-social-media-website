@@ -23,6 +23,7 @@ class PostController extends Controller
 
     public function store(StorePostRequest $request)
     {
+        
         $allFiles = [];
         $data = $request->validated();
 
@@ -70,6 +71,7 @@ class PostController extends Controller
     {
         $user = request()->user();
         DB::beginTransaction();
+        //dd($request->validated());
         try {
 
             $data =  $request->validated();

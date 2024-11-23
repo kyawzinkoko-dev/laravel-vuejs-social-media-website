@@ -42,11 +42,13 @@
                                         <XMarkIcon class="w-4 h-4" />
                                     </button>
                                 </DialogTitle>
-                                <div class="mt-2 p-4">
+                                <div class=" p-3">
                                     <PostHeaderUser
                                         :post="post"
                                         :show-time="false"
+                                        class="mb-3"
                                     />
+                                    <div v-if="error.group_id" class="bg-red-400 text-white py-1 px-3 mb-3 rounded ">{{ error.group_id }}</div>
                                     <ckeditor
                                         :editor="editor"
                                         v-model="form.body"
@@ -233,13 +235,19 @@ const editorConfig = {
     ],
 };
 const attachmentExtansion = usePage().props.attachmentExtansions;
+
 const props = defineProps({
     post: {
         type: Object,
         required: false,
     },
+    group:{type:Object,
+        default:null
+    },
     modelValue: Boolean,
+    
 });
+console.log(props.group)
 /**
  * 'file' :File
  *  mime :'',
@@ -304,14 +312,21 @@ function closeModal() {
 const form = useForm({
     id: "",
     body: "",
+    group_id:null,
     attachments: [],
     delete_file_ids: [],
     _method: "POST",
+    
 });
 
 //update  or create post
 const submit = () => {
+    
     form.attachments = attachmentFiles.value.map((myFile) => myFile.file);
+    if(props.group){
+        form.group_id = props.group.id
+    }
+   
     if (props.post.id) {
         form._method = "PUT";
         form.post(route("post.update", props.post), {
@@ -325,7 +340,7 @@ const submit = () => {
             },
         });
     } else {
-        form.post(route("post.create"), {
+            form.post(route("post.create"), {
             preserveScroll: true,
             onSuccess: () => {
                 closeModal();
@@ -334,7 +349,9 @@ const submit = () => {
                 processErrors(e);
             },
         });
-    }
+        }
+        
+    
 };
 
 //function to validate exansion of atachments

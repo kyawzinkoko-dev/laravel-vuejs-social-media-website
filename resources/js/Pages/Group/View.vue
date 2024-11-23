@@ -79,7 +79,9 @@
             </div>
 
             <div class="">
+                
                 <TabGroup>
+                   
                     <TabList class="flex bg-white">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected" />
@@ -99,7 +101,13 @@
                     </TabList>
 
                     <TabPanels class="mt-2">
-                        <TabPanel class="bg-white p-3 shadow"> Posts </TabPanel>
+                        <TabPanel class=" ">
+                           <div v-if="posts">
+                            <CreatePost :group="group"/>
+                            <PostList :posts="posts.data" />
+                           </div>
+                           <div  class="text-center text-xl  ">You don't have permission to view posts</div>
+                        </TabPanel>
                         <TabPanel>
                             <div class="mb-3">
                                 <TextInput class="w-full" :model-value="searchKeyword" placeholder="Search User " />
@@ -156,16 +164,20 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { CameraIcon, XMarkIcon, CheckIcon } from "@heroicons/vue/24/outline";
 import { BookmarkIcon } from "@heroicons/vue/24/outline";
-
+import PostList from "@/Components/app/PostList.vue";
 import TabItem from "../Profile/Partials/TabItem.vue";
 import InviteUserModal from "@/Components/app/InviteUserModal.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
+import CreatePost from "@/Components/app/CreatePost.vue";
 
 const props = defineProps({
     group: {
         type: Object,
+    },
+    posts: {
+        type: Object
     },
     success: {
         type: String,
@@ -177,8 +189,6 @@ const props = defineProps({
         type: Array,
     },
 });
-console.log(props.group);
-console.log(props.users)
 
 const thumbnailImageSc = ref("");
 const coverImageSrc = ref("");
@@ -208,7 +218,7 @@ const showInviteUserModal = () => {
 
 
 const updateGroup = () => {
-    groupForm.put(route('group.update',props.group.slug), { preserveScroll: true })
+    groupForm.put(route('group.update', props.group.slug), { preserveScroll: true })
 }
 
 const onCoverChange = (e) => {

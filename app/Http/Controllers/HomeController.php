@@ -15,7 +15,8 @@ use Inertia\Inertia;
 class HomeController extends Controller
 {
     public function index(){
-        $posts =PostResource::collection( Post::all());
+        $userId = Auth::id();
+        $posts =Post::postForTimeline($userId)->paginate(2);
       
          $group = Group::query()
                 ->with('currentUserGroup')
@@ -26,7 +27,10 @@ class HomeController extends Controller
                  ->orderBy('gu.role')
                  ->orderBy('name','desc')
                  ->get();
-               
+             $posts = PostResource::collection($posts);  
+             if(request()->wantsJson()){
+                return $posts;
+             }
         return Inertia::render('Home',[
             'posts'=>$posts,
             'groups'=>$group ? GroupResource::collection($group)->toArray(request()) :[]

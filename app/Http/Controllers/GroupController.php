@@ -9,9 +9,11 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\GroupUser;
+use App\Models\Post;
 use App\Models\User;
 use App\Notifications\InvitationApproved;
 use App\Notifications\InvitationInGroup;
@@ -32,9 +34,24 @@ class GroupController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function profile(Group $group)
+    public function profile(Group $group,Request $request)
     {
+        $userId = Auth::id();
         $group->load('currentUserGroup');
+
+        if($group->isApprovedUser($userId)){
+            $posts = Post::postForTimeline($userId)
+        ->where('group_id',$group->id)
+        ->paginate(2);
+        }
+        else{
+            $posts = [];
+        }
+        
+        if($request->wantsJson()){
+            return PostResource::collection($posts);
+        }
+
         $user = User::query()
         ->select(['users.*','gu.role','gu.status','gu.group_id'])
         ->join('group_users as gu','gu.user_id','users.id')
@@ -46,6 +63,7 @@ class GroupController extends Controller
         $pendingUser = $group->pendingUser()->orderBy('name')->get();
         return Inertia::render("Group/View", [
             //'status'=>
+            'posts'=>PostResource::collection($posts),
             'group' => new GroupResource($group),
             'users' => GroupUserResource::collection($user),
             'pendingUsers' => UserResource::collection($pendingUser),

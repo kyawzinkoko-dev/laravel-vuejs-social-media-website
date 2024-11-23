@@ -10,8 +10,8 @@
                 <FriendItem />
             </div>
             <div class="lg:col-span-6 px-4 py-6 flex flex-col lg:order-2 overflow-hidden h-full">
-                <CreatePost />
-                <PostList :posts="posts.data" />
+               <CreatePost />
+                <PostList :posts="posts.data" class="flex-1" />
             </div>
         </div>
 

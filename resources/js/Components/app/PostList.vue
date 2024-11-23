@@ -5,9 +5,7 @@ import { ref, onMounted, watch } from "vue";
 import { usePage } from "@inertiajs/vue3";
 import AttachmentPreviewModal from "./AttachmentPreviewModal.vue";
 import axiosClient from "@/axiosClient";
-defineProps({
-    posts: Array,
-});
+
 const authUser = usePage().props.auth.user;
 const page = usePage();
 const showEditModal = ref(false);
@@ -19,20 +17,21 @@ const allPost = ref({
     data: [],
     next: null,
 });
-
+defineProps({
+    posts: Array,
+});
 watch(
     () => page.props.posts,
     () => {
         if (page.props.posts) {
             allPost.value = {
-                data: page.props.posts,
+                data: page.props.posts.data,
                 next: page.props.posts.links?.next,
             };
         }
     },
     { deep: true, immediate: true }
 );
-console.log(page.props.posts)
 // watch(() => page.props.posts, () => {
 //     if (page.props.posts) {
 //         allPosts.value = {
@@ -43,8 +42,10 @@ console.log(page.props.posts)
 // }, {deep: true, immediate: true})
 const openEditModal = (post) => {
     editPost.value = post;
+    console.log(editPost)
     showEditModal.value = true;
 };
+
 const openAttachmentPreviewModal = (post, index) => {
     previewAttachmentPost.value = {
         post,
@@ -59,19 +60,18 @@ const onModalHide = () => {
         user: authUser,
     };
 };
-
 function loadMore() {
-   
     if (!allPost.value.next) {
         return;
     }
     axiosClient.get(allPost.value.next).then(({data}) => {
-      
+        console.log(data)
         allPost.value.data= [...allPost.value.data,...data.data]
         allPost.value.next = data.links?.next;
     });
 }
 onMounted(() => {
+    console.log('load more triggered')
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => entry.isIntersecting && loadMore());
@@ -92,6 +92,7 @@ onMounted(() => {
         />
         <div ref="loadMoreInterset"></div>
         <PostModal
+            :group="editPost.group"
             :post="editPost"
             v-model="showEditModal"
             @hide="onModalHide"

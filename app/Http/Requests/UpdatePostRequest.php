@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 
 
-class UpdatePostRequest extends FormRequest
+class UpdatePostRequest extends StorePostRequest
 {
     /**
      * Determine if the user is authorized to make this request.

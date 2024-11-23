@@ -61,7 +61,7 @@ const authUser = usePage().props.auth.user;
                                     </template>
                                    
                                     <template #content>
-                                        <DropdownLink :href="route('profile',{username:authUser.username})"> Profile </DropdownLink>
+                                        <DropdownLink :href="route('profile',authUser)"> Profile </DropdownLink>
                                         <DropdownLink :href="route('logout')" method="post" as="button">
                                             Log Out
                                         </DropdownLink>

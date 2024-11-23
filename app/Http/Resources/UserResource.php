@@ -14,8 +14,10 @@ class UserResource extends JsonResource
      *
      * @return array<string, mixed>
      */
+
     public function toArray(Request $request): array
     {
+    
         return   [
             "id" => $this->id,
             "name" => $this->name,
@@ -24,8 +26,8 @@ class UserResource extends JsonResource
             "created_at" => $this->created_at,
             "updated_at" => $this->updated_at,
             "username" => $this->username,
-            "cover_url" => $this->cover_path ?  Storage::url($this->cover_path) : null,
-            "avatar_url" => $this->avatar_path ?  Storage::url($this->avatar_path) : null
+            "cover_url" => $this->cover_path ?  Storage::url($this->cover_path) : '/img/default_background.jpeg',
+            "avatar_url" => $this->avatar_path ?  Storage::url($this->avatar_path) : '/img/default_avatar.png'
         ];
     }
 }

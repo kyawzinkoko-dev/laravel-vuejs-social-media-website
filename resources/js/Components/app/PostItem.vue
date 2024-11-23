@@ -14,7 +14,6 @@ import Attachments from "./Attachments.vue";
 const props = defineProps({
     post: Object,
 });
-console.log(props.post)
 const emit = defineEmits(["editClick", "attachmentClick"]);
 const openEditModal = () => {
     emit("editClick", props.post);
@@ -47,7 +46,7 @@ function sendReaction(type) {
 
 <template>
     <div class="bg-white p-4 rounded border shadow-sm mb-3">
-        <!-- <pre>{{ post }}</pre> -->
+     
         <div class="flex justify-between items-center">
             <PostHeaderUser :post="post" />
 
@@ -60,9 +59,10 @@ function sendReaction(type) {
         <div
             class="grid gap-2 my-2"
             :class="[
-                post.attachments.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
+                post.attachments?.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
             ]"
         >
+       
             <Attachments
                 :attachments="post.attachments"
                 @attachmentClick="openAtachment"
@@ -98,7 +98,7 @@ function sendReaction(type) {
             </div>
           
             <DisclosurePanel
-                class="px-4 h-80 pb-2 pt-4 text-sm text-gray-500 overflow-auto"
+                class="px-4 max-h-80 pb-2  pt-4 text-sm text-gray-500 overflow-auto"
                
             >
                 <CommentList

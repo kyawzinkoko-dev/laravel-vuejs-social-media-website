@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Enums\GroupUserStatus;
+use App\Models\GroupUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -14,10 +16,25 @@ class StorePostRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      */
     static array $extansions = [
-        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
-        'mp3', 'wav', 'mp4','mkv',
-        'doc', 'docx', 'pdf', 'csv', 'xls', 'xlsx',
-        'zip', '7zip','txt'
+        'jpg',
+        'jpeg',
+        'png',
+        'gif',
+        'webp',
+        'svg',
+        'mp3',
+        'wav',
+        'mp4',
+        'mkv',
+        'doc',
+        'docx',
+        'pdf',
+        'csv',
+        'xls',
+        'xlsx',
+        'zip',
+        '7zip',
+        'txt'
     ];
     public function authorize(): bool
     {
@@ -31,23 +48,35 @@ class StorePostRequest extends FormRequest
      */
     public function rules(): array
     {
+
         return [
             'body' => ['nullable', 'string'],
             'attachments' => [
-                'nullable', 'array', 'max:30',
+                'nullable',
+                'array',
+                'max:30',
                 function ($attribute, $value, $fail) {
-                    $totalSize = collect($value)->sum(fn (UploadedFile $file) => $file->getSize());
-                    if($totalSize >1*1024*1024*1024){
+                    $totalSize = collect($value)->sum(fn(UploadedFile $file) => $file->getSize());
+                    if ($totalSize > 1 * 1024 * 1024 * 1024) {
                         $fail("Total size must not exceed 1GB");
-
                     }
                 }
             ],
             'attachments.*' => [
                 'file',
-                File::types(self::$extansions)->max(500 * 1024 *1024)
+                File::types(self::$extansions)->max(500 * 1024 * 1024)
             ],
-            'user_id' => ['numeric']
+            'user_id' => ['numeric'],
+            'group_id' => ['nullable', 'exists:groups,id', function ($attribute, $value, \Closure $fail) {
+                /** @var $groupUser,  */
+                $groupUser = GroupUser::where('user_id', Auth::id())
+                ->where('group_id', $value)
+                ->where('status',GroupUserStatus::APPROVED->value)
+                ->exists();
+                if(!$groupUser){
+                    $fail("You don't have permission to create post ");
+                }
+            }]
         ];
     }
     public function prepareForValidation()
@@ -62,8 +91,8 @@ class StorePostRequest extends FormRequest
     {
         return [
             'attachments.*.file' => 'Each attachment must be a file',
-            'attachments.*.mimes'=>'Invalid file type for attachment',
-            'attachments.*.max'=>'Each file must not exceed 500MB'
+            'attachments.*.mimes' => 'Invalid file type for attachment',
+            'attachments.*.max' => 'Each file must not exceed 500MB'
         ];
     }
 }
