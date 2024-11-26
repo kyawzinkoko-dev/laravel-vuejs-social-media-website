@@ -19,7 +19,7 @@
                            class="absolute right-0 mt-2 z-30 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                        >
                            <div class="p-1">
-                               <MenuItem v-slot="{ active }">
+                               <MenuItem v-if="isEditAllow" v-slot="{ active }">
                                    <button
                                        @click="$emit('edit')"
                                        :class="[
@@ -36,7 +36,7 @@
                                        Edit
                                    </button>
                                </MenuItem>
-                               <MenuItem v-slot="{ active }">
+                               <MenuItem v-if="isDeleteAllow" v-slot="{ active }">
                                    <button
                                        @click="$emit('delete')"
                                        :class="[
@@ -73,7 +73,32 @@ import {
    MenuItems,
    MenuItem,
 } from "@headlessui/vue";
+import { usePage } from "@inertiajs/vue3";
+import { computed } from "vue";
 
+const props = defineProps({
+    post:{
+        type:Object,
+        default:null
+    },
+    comment:{
+        type:Object,
+        default:null
+    }
+})
+const authUser = usePage().props.auth.user;
+const user = computed(()=> props.comment?.user||props.post?.user )
+const isEditAllow =computed(()=>{
+    
+    return user.value.id === authUser.id
+}) ;
+
+const isDeleteAllow = computed(()=>{    
+    if(user.value.id === authUser.id) return true;
+    
+    if(props.post.user.id ===authUser.id) return true;
+    return  props.post?.group?.role ==="admin";  
+})
 defineEmits(['edit','delete'])
 </script>
 

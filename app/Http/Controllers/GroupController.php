@@ -45,7 +45,7 @@ class GroupController extends Controller
         ->paginate(2);
         }
         else{
-            $posts = [];
+            $posts = null;
         }
         
         if($request->wantsJson()){
@@ -63,7 +63,7 @@ class GroupController extends Controller
         $pendingUser = $group->pendingUser()->orderBy('name')->get();
         return Inertia::render("Group/View", [
             //'status'=>
-            'posts'=>PostResource::collection($posts),
+            'posts'=>$posts ?  PostResource::collection($posts) : null,
             'group' => new GroupResource($group),
             'users' => GroupUserResource::collection($user),
             'pendingUsers' => UserResource::collection($pendingUser),
@@ -86,6 +86,7 @@ class GroupController extends Controller
             'group_id' => $group->id,
             'created_by' => Auth::id()
         ];
+        //dd($groupUser);
         GroupUser::create($groupUser);
         $group->status = $groupUser['status'];
         $group->role = $groupUser['role'];

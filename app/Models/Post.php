@@ -41,6 +41,9 @@ class Post extends Model
         return $this->hasMany(Comment::class)->latest()->limit(5);
     }
 
+    public function isOwner($userId){
+        return $this->user_id ==$userId;
+    }
     public static function postForTimeline($userId): Builder
     {
         return Post::query()

@@ -15,7 +15,7 @@ class Comment extends Model
     public int $numOfComments = 0;
     protected $fillable = ['post_id', 'comment', 'user_id', 'parent_id'];
 
-    
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -31,6 +31,13 @@ class Comment extends Model
     public function reactions()
     {
         return $this->morphMany(Reaction::class, 'object');
+    }
+    public function post(){
+        return $this->belongsTo(Post::class);
+    }
+    public function isOwner($userId): bool
+    {
+        return $this->user_id === $userId;
     }
     //relation for parent comment 
     public function comments(): HasMany

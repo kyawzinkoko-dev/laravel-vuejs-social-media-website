@@ -106,7 +106,7 @@
                             <CreatePost :group="group"/>
                             <PostList :posts="posts.data" />
                            </div>
-                           <div  class="text-center text-xl  ">You don't have permission to view posts</div>
+                           <div v-else  class="text-center text-xl  ">You don't have permission to view posts</div>
                         </TabPanel>
                         <TabPanel>
                             <div class="mb-3">
@@ -118,7 +118,8 @@
                                     :disable-role-dropdown="group.user_id === user.id" />
                             </div>
                         </TabPanel>
-                        <TabPanel class="bg-white p-3 shadow">
+                        <TabPanel v-if="isCurrentUserAdmin" class="bg-white p-3 shadow">
+                           
                             <div v-if="pendingUsers.length">
                                 <div class="grid gap-3 grid-cols-2">
                                     <UserListItem v-for="user of pendingUsers" :key="user.id" :user="user"
@@ -128,6 +129,7 @@
                             <div v-else class="flex justify-center items-center">
                                 <h3>Don't have any request</h3>
                             </div>
+                       
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
                             Photos
@@ -177,7 +179,8 @@ const props = defineProps({
         type: Object,
     },
     posts: {
-        type: Object
+        type: Object,
+        default:null
     },
     success: {
         type: String,
@@ -197,7 +200,6 @@ const openInviteUserModal = ref(false);
 const authUser = usePage().props.auth.user;
 const searchKeyword = ref("");
 const isCurrentUserAdmin = computed(() => props.group.role === "admin");
-
 const isCurrentUserJoinGroup = computed(
     () => props.group.role && props.group.status === "approved"
 );
@@ -208,7 +210,7 @@ const imageFile = useForm({
 const groupForm = useForm({
     name: usePage().props.group.name,
     auto_approve: !!parseInt(usePage().props.group.auto_approve),
-    about: usePage().props.group.about
+    about: usePage().props.group.about || ''
 })
 
 const showInviteUserModal = () => {

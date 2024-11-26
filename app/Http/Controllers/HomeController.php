@@ -29,7 +29,7 @@ class HomeController extends Controller
                  ->get();
              $posts = PostResource::collection($posts);  
              if(request()->wantsJson()){
-                return $posts;
+                return $posts;  
              }
         return Inertia::render('Home',[
             'posts'=>$posts,

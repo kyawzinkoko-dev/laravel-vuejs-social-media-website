@@ -19,6 +19,7 @@ const openEditModal = () => {
     emit("editClick", props.post);
 };
 
+
 function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
         router.delete(route("post.destroy", props.post), {
@@ -50,7 +51,7 @@ function sendReaction(type) {
         <div class="flex justify-between items-center">
             <PostHeaderUser :post="post" />
 
-            <EditDeleteDropdown @edit="openEditModal" @delete="deletePost" />
+            <EditDeleteDropdown  :post="post" @edit="openEditModal" @delete="deletePost" />
         </div>
         <div>
             <ReadMoreReadLess :content="post.body" />

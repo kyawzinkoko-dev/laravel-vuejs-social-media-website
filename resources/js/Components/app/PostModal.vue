@@ -247,7 +247,7 @@ const props = defineProps({
     modelValue: Boolean,
     
 });
-console.log(props.group)
+
 /**
  * 'file' :File
  *  mime :'',

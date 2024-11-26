@@ -43,12 +43,14 @@
                         </div>
                     </div>
                 </div>
-                <div v-if="comment.user_id === authUser.id">
+                <pre>{{  }}</pre>
                     <EditDeleteDropdown
+                        :post="post"
+                        :comment="comment"
                         @edit="startCommentEdit(comment)"
                         @delete="deleteComment(comment)"
                     />
-                </div>
+                
             </div>
 
             <div class="ml-14">
@@ -155,7 +157,6 @@ const props = defineProps({
         type:String,
     }
 });
-
 function onCommentCreate(){
     if(props.parentComment){
         props.parentComment.num_of_comments++;
@@ -246,7 +247,6 @@ function deleteComment(comment) {
              });
     }
 }
-console.log(props.post.num_of_comments)
 //
 function sendCommentReaction(comment) {
     axios
