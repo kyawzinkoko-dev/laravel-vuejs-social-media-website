@@ -40,7 +40,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/group/join/{group:slug}',[GroupController::class,'joinGroup'])->name('group.joinGroup');
     Route::post('/group/aprove-request/{group:slug}',[GroupController::class,'approveRequest'])->name('group.approveRequest');
     Route::post('/group/change-role/{group:slug}',[GroupController::class,'changeRole'])->name('group.changeRole');
+    Route::delete('/group/delete-user/{group:slug}',[GroupController::class,'deleteUser'])->name('group.deleteUser');
     //post section 
+
     Route::post('/post', [PostController::class, 'store'])->name('post.create');
     Route::put('/post/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');

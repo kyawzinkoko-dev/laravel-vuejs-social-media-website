@@ -15,6 +15,7 @@ use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\GroupUserRemoved;
 use App\Notifications\InvitationApproved;
 use App\Notifications\InvitationInGroup;
 use App\Notifications\RequestApproved;
@@ -281,6 +282,32 @@ class GroupController extends Controller
             return back();
         }
         
+       
+
+    }
+    public function deleteUser(Request $req,Group $group){
+
+            if(!$group->isAdmin(Auth::id())){
+                return response("You don't have permission to do this action");
+            }
+            $data = $req->validate([
+                'user_id'=>'required'
+            ]);
+            
+            $userId = $data['user_id'];
+            if($group->isOwner($userId)){
+                return  response('The owner of the group cannot be removed');
+            }
+            $gropUser  =GroupUser::where('user_id',$userId)
+            ->where('group_id',$group->id)
+            ->first();
+            if($gropUser){
+                $user = $gropUser->user;
+                $user->delete();
+                $user->notify(new GroupUserRemoved($group));
+                return back();
+            }
+            
 
     }
 }

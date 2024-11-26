@@ -47,7 +47,7 @@ class Group extends Model
     }
 
     function isOwner($userId){
-        return $this->user_id =$userId;
+        return $this->user_id ==$userId;
     }
     function adminUser():BelongsToMany
     {
