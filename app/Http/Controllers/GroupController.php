@@ -298,12 +298,12 @@ class GroupController extends Controller
             if($group->isOwner($userId)){
                 return  response('The owner of the group cannot be removed');
             }
-            $gropUser  =GroupUser::where('user_id',$userId)
+            $groupUser  =GroupUser::where('user_id',$userId)
             ->where('group_id',$group->id)
             ->first();
-            if($gropUser){
-                $user = $gropUser->user;
-                $user->delete();
+            if($groupUser){
+                $user = $groupUser->user;
+                $groupUser->delete();
                 $user->notify(new GroupUserRemoved($group));
                 return back();
             }

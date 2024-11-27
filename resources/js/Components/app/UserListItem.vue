@@ -4,7 +4,7 @@
     >
         <Link :href="route('profile', user.username)">
             <img
-                :src="user.avatar_url || '/img/avatar.jpg'"
+                :src="user.avatar_url"
                 class="rounded-full w-[40px] cursor-pointer hover:border border-gray-500"
             />
         </Link>
@@ -66,7 +66,7 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 
-defineProps({
+ const props = defineProps({
     user: Object,
     forApprove: {
         type: Boolean,
@@ -81,6 +81,7 @@ defineProps({
         default: false,
     },
 });
+console.log(props.user);
 
 defineEmits(["approve", "reject", "roleChange","deleteUser"]);
 </script>
