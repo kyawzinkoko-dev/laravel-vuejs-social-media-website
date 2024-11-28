@@ -7,7 +7,7 @@
                     class="rounded-full w-12 border-2 hover:border-blue-500"
                 />
             </a>
-            <div class="flex flex-1 ">
+            <div class="flex flex-1">
                 <InputTextarea
                     v-model="newComment"
                     :placeholder="placeholder"
@@ -43,14 +43,12 @@
                         </div>
                     </div>
                 </div>
-                <pre>{{  }}</pre>
-                    <EditDeleteDropdown
-                        :post="post"
-                        :comment="comment"
-                        @edit="startCommentEdit(comment)"
-                        @delete="deleteComment(comment)"
-                    />
-                
+                <EditDeleteDropdown
+                    :post="post"
+                    :comment="comment"
+                    @edit="startCommentEdit(comment)"
+                    @delete="deleteComment(comment)"
+                />
             </div>
 
             <div class="ml-14">
@@ -72,7 +70,7 @@
                         >
                     </div>
                 </div>
-               
+
                 <div v-else>
                     <ReadMoreReadLess
                         :content="comment.comment"
@@ -111,7 +109,7 @@
                     </div>
                     <DisclosurePanel class="mt-3">
                         <CommentList
-                        :placeholder="'Write a reply'"
+                            :placeholder="'Write a reply'"
                             :post="post"
                             :data="{ comments: comment.comments }"
                             :parent-comment="comment"
@@ -136,8 +134,9 @@ import {
 } from "@heroicons/vue/24/outline";
 import ReadMoreReadLess from "../ReadMoreReadLess.vue";
 import { ref } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { router, usePage } from "@inertiajs/vue3";
 import axiosClient from "@/axiosClient";
+import axios from "axios";
 
 const newComment = ref("");
 const editingComment = ref({});
@@ -153,23 +152,23 @@ const props = defineProps({
         type: [Object || null],
         default: null,
     },
-    placeholder:{
-        type:String,
-    }
+    placeholder: {
+        type: String,
+    },
 });
-function onCommentCreate(){
-    if(props.parentComment){
+function onCommentCreate() {
+    if (props.parentComment) {
         props.parentComment.num_of_comments++;
-        emit('createComment')
+        emit("createComment");
     }
 }
-function onDeleteComment(){
-    if(props.parentComment){
+function onDeleteComment() {
+    if (props.parentComment) {
         props.parentComment.num_of_comments--;
-        emit('deleteComment')
+        emit("deleteComment");
     }
 }
-const emit = defineEmits(['createComment','deleteComment'])
+const emit = defineEmits(["createComment", "deleteComment"]);
 
 //create a new comment
 function createComment() {
@@ -179,14 +178,13 @@ function createComment() {
             parent_id: props.parentComment?.id || null,
         })
         .then(({ data }) => {
-            emit('createComment', data)
+            emit("createComment", data);
             newComment.value = "";
             if (props.parentComment) {
                 props.parentComment.comments.unshift(data);
                 props.parentComment.num_of_comments++;
             } else {
                 props.data.comments.unshift(data);
-               
             }
             props.post.num_of_comments++;
         });
@@ -219,40 +217,38 @@ function updateComment() {
 //delete comments
 function deleteComment(comment) {
     if (window.confirm("Are you sure you want to delete")) {
-        axios
+        axiosClient
             .delete(
                 route("comment.delete", {
                     comment,
-                })
+                }),//{preserveScroll:true}
             )
             .then(({ data }) => {
-                emit('deleteComment',data)
-                const commentIndex = props.data.comments.find((c)=>c.id===comment.id)
-                props.data.comments.splice(commentIndex, 1)
-                 if (props.parentComment) {
-                     props.parentComment.num_of_comments--;
-                 } 
-                  if(comment.comments){
-                  
-                    console.log(props.post.num_of_comments)
-                    props.post.num_of_comments-= comment.comments.length+1;
-                    console.log(props.post.num_of_comments)
-                    console.log(props.post.num_of_comments)
+                emit("deleteComment", data);
+                const commentIndex = props.data.comments.find(
+                    (c) => c.id === comment.id
+                );
+                props.data.comments.splice(commentIndex, 1);
+                if (props.parentComment) {
+                    props.parentComment.num_of_comments--;
                 }
-                  else{
+                if (comment.comments) {
+                    console.log(props.post.num_of_comments);
+                    props.post.num_of_comments -= comment.comments.length + 1;
+                    console.log(props.post.num_of_comments);
+                    console.log(props.post.num_of_comments);
+                } else {
                     props.post.num_of_comments--;
-                  }
-                     
-                   
-             });
+                }
+            });
     }
 }
 //
 function sendCommentReaction(comment) {
-    axios
+    axiosClient
         .post(route("comment.reaction", comment.id), {
             reaction: "like",
-        })
+        },{preserveScroll:true})
         .then(({ data }) => {
             comment.current_user_has_reaction = data.current_user_has_reaction;
             comment.num_of_reactions = data.num_of_reactions;

@@ -11,11 +11,16 @@ use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostAttachment;
 use App\Models\Reaction;
+use App\Notifications\CommentCreated;
 use App\Notifications\CommentDeleted;
+use App\Notifications\PostCreated;
 use App\Notifications\PostDeleted;
+use App\Notifications\ReactionAddedOnComment;
+use App\Notifications\ReactionAddedOnPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -50,6 +55,8 @@ class PostController extends Controller
                 ]);
             }
             DB::commit();
+            $group = $post->group;
+            Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$group));
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);
@@ -102,6 +109,7 @@ class PostController extends Controller
                 ]);
             }
             DB::commit();
+            
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);
@@ -159,6 +167,10 @@ class PostController extends Controller
                 'user_id' => $userId,
                 'type' => $data['reaction']
             ]);
+            $user = $post->user;
+            if(!$post->isOwner($userId)){
+            $user->notify(new ReactionAddedOnPost($post,Auth::user()));
+            }
         }
 
         $reactionCount = Reaction::where('object_id', $post->id)
@@ -182,6 +194,8 @@ class PostController extends Controller
             'comment' =>  nl2br($data['comment']),
             'parent_id' => $data['parent_id']
         ]);
+        $post =$comment->post;
+        $post->user->notify(new CommentCreated($comment));
         return response(new CommentResource($comment), 201);
     }
     public function deleteComment(Comment $comment)
@@ -234,6 +248,11 @@ class PostController extends Controller
                 'object_type' => Comment::class,
                 'type' => $data['reaction']
             ]);
+            $user = $comment->user;
+            if(!$comment->isOwner($userId)){
+            $user->notify(new ReactionAddedOnComment(Auth::user(),$comment,$comment->post));
+            }
+
         }
         $reactionCount = Reaction::where('object_id', $comment->id)->where('object_type', Comment::class)->count();
         return response([
