@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -16,12 +17,13 @@ class CommentResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        //dd($this->reactions()->where('user_id',Auth::id())->exists());
         return [
             'id'=>$this->id,
             'comment'=>$this->comment,
             'user_id'=>$this->user_id,
             'post_id'=>$this->post_id,
-            'current_user_has_reaction'=>$this->reactions->count() >0,
+            'current_user_has_reaction'=>$this->reactions()->where('user_id',Auth::id())->exists() ,
             'num_of_reactions'=>$this->reactions_count,
             'num_of_comments'=>$this->numOfComments,
             'comments'=>$this->childComments,

@@ -18,7 +18,41 @@
                        <MenuItems
                            class="absolute right-0 mt-2 z-30 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                        >
-                           <div class="p-1">
+                           <div class="py-2 px-1">
+                            <MenuItem  v-slot="{ active }">
+                                   <a
+                                      :href="route('post.view',post )"
+                                       :class="[
+                                           active
+                                               ? 'bg-indigo-500 text-white'
+                                               : 'text-gray-800',
+                                           'flex items-center rounded w-full p-2 text-sm',
+                                       ]"
+                                   >
+                                       <EyeIcon
+                                           aria-hidden="true"
+                                           class="w-5 h-5 text-black/50 mr-2"
+                                       />
+                                       View Post
+                            </a>
+                               </MenuItem>
+                            <MenuItem  v-slot="{ active }">
+                                   <button
+                                       @click="copyToClipboard"
+                                       :class="[
+                                           active
+                                               ? 'bg-indigo-500 text-white'
+                                               : 'text-gray-800',
+                                           'flex items-center rounded w-full p-2 text-sm',
+                                       ]"
+                                   >
+                                       <ClipboardIcon
+                                           aria-hidden="true"
+                                           class="w-5 h-5 text-black/50 mr-2"
+                                       />
+                                       Copy Post Url
+                                   </button>
+                               </MenuItem>
                                <MenuItem v-if="isEditAllow" v-slot="{ active }">
                                    <button
                                        @click="$emit('edit')"
@@ -31,7 +65,7 @@
                                    >
                                        <PencilIcon
                                            aria-hidden="true"
-                                           class="w-5 h-5 text-indigo-400 mr-2"
+                                           class="w-5 h-5 text-black/50 mr-2"
                                        />
                                        Edit
                                    </button>
@@ -48,7 +82,7 @@
                                    >
                                        <TrashIcon
                                            aria-hidden="true"
-                                           class="w-5 h-5 text-indigo-400 mr-2"
+                                           class="w-5 h-5 text-black/50 mr-2"
                                        />
                                        Delete
                                    </button>
@@ -65,8 +99,10 @@ import {
    PencilIcon,
    EllipsisVerticalIcon,
    TrashIcon,
+   ClipboardIcon,
+   EyeIcon,
 
-} from "@heroicons/vue/24/outline";
+} from "@heroicons/vue/24/solid";
 import {
    Menu,
    MenuButton,
@@ -98,6 +134,12 @@ const isDeleteAllow = computed(()=>{
     
     if(props.post.user.id ===authUser.id) return true;
     return  props.post?.group?.role ==="admin";  
+})
+
+const copyToClipboard =computed(() =>{
+    navigator.clipboard.writeText(route(`post.view`,props.post)).then((d)=>{console.log(d)}).catch((e)=>console.log(e))
+    
+
 })
 defineEmits(['edit','delete'])
 </script>

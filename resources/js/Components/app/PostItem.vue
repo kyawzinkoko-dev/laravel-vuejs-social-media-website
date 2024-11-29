@@ -28,6 +28,8 @@ function deletePost() {
     }
 }
 function openAtachment(index) {
+
+    
     emit("attachmentClick", props.post, index);
 }
 

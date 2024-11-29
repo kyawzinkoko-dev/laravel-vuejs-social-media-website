@@ -72,6 +72,7 @@
                 </div>
 
                 <div v-else>
+                   
                     <ReadMoreReadLess
                         :content="comment.comment"
                         content-class="tex-sm  flex flex-1"
@@ -134,7 +135,7 @@ import {
 } from "@heroicons/vue/24/outline";
 import ReadMoreReadLess from "../ReadMoreReadLess.vue";
 import { ref } from "vue";
-import { router, usePage } from "@inertiajs/vue3";
+import {  usePage } from "@inertiajs/vue3";
 import axiosClient from "@/axiosClient";
 import axios from "axios";
 
@@ -162,6 +163,7 @@ function onCommentCreate() {
         emit("createComment");
     }
 }
+
 function onDeleteComment() {
     if (props.parentComment) {
         props.parentComment.num_of_comments--;
@@ -245,6 +247,7 @@ function deleteComment(comment) {
 }
 //
 function sendCommentReaction(comment) {
+    console.log(comment)
     axiosClient
         .post(route("comment.reaction", comment.id), {
             reaction: "like",

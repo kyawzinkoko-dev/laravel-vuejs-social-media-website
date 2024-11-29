@@ -10,6 +10,17 @@
         </div>
         <div v-else class="mt-3">
         <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
+        <FollowingList title="test" image="https://placehold.co/400"/>
             </div>
     </div>
 </template>

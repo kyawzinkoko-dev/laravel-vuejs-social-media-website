@@ -7,6 +7,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdateCommentRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Resources\CommentResource;
+use App\Http\Resources\PostResource;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostAttachment;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
-
+use Inertia\Inertia;
 
 class PostController extends Controller
 {
@@ -56,7 +57,10 @@ class PostController extends Controller
             }
             DB::commit();
             $group = $post->group;
-            Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$group));
+            if($group){
+                Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$group));
+            }
+           
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);
@@ -195,7 +199,7 @@ class PostController extends Controller
             'parent_id' => $data['parent_id']
         ]);
         $post =$comment->post;
-        $post->user->notify(new CommentCreated($comment));
+        $post->user->notify(new CommentCreated($comment,$post));
         return response(new CommentResource($comment), 201);
     }
     public function deleteComment(Comment $comment)
@@ -236,7 +240,9 @@ class PostController extends Controller
         $reaction = Reaction::query()
             ->where('object_id', $comment->id)
             ->where('object_type', Comment::class)
+            ->where('user_id',$userId)
             ->first();
+            //dd($reaction);
         if ($reaction) {
             $hasReaction = false;
             $reaction->delete();
@@ -258,6 +264,17 @@ class PostController extends Controller
         return response([
             'current_user_has_reaction' => $hasReaction,
             'num_of_reactions' => $reactionCount
+        ]);
+    }
+    public function view(Post $post){
+        $post->loadCount('reactions');
+        $post->load([
+            'comments'=> function($query){
+                $query->withCount('reactions');
+            }
+        ]);
+        return Inertia::render('Post/View',[
+            'post'=>new PostResource($post)
         ]);
     }
 }

@@ -47,6 +47,8 @@ const openEditModal = (post) => {
 };
 
 const openAttachmentPreviewModal = (post, index) => {
+    console.log('here');
+    
     previewAttachmentPost.value = {
         post,
         index,
@@ -82,7 +84,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="overflow-auto h-full flex-1 flex flex-col">
+    <div class="overflow-auto ">
         <PostItem
             v-for="post of allPost.data"
             :key="post.id"

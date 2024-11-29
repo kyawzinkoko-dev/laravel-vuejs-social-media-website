@@ -13,7 +13,7 @@ const authUser = usePage().props.auth.user;
 
 <template>
 
-        <div class="min-h-screen h-full flex flex-col overflow-hidden bg-gray-100">
+        <div class=" h-full flex flex-col overflow-hidden bg-gray-100">
             <nav class="bg-white border-b border-gray-100">
                 <!-- Primary Navigation Menu -->
                 <div class=" mx-auto px-4 sm:px-6 lg:px-8">
@@ -141,7 +141,7 @@ const authUser = usePage().props.auth.user;
             </header>
 
             <!-- Page Content -->
-            <main class=" overflow-hidden">
+            <main class=" flex-1 overflow-hidden">
                 <slot />
             </main>
         </div>
