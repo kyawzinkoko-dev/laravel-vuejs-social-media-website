@@ -153,7 +153,7 @@
                             <TabItem text="Photos" :selected="selected" />
                         </Tab>
                         <Tab
-                            v-if="isCurrentUserAdmin"
+                            
                             v-slot="{ selected }"
                             as="template"
                         >
@@ -221,9 +221,9 @@
                             Photos
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
-                            <div class="m-4">
+                            <div v-if="isCurrentUserAdmin" class="m-4">
                                 <GroupForm :form="groupForm" />
-                                <div class="flex justify-end my-3">
+                                <div  class="flex justify-end my-3">
                                     <div class="flex gap-2 items-center">
                                         <button
                                             type="button"
@@ -236,6 +236,10 @@
                                     </div>
                                 </div>
                             </div>
+                            <template v-else>
+                               
+                                <h2 v-html="group.about"></h2>
+                            </template>
                         </TabPanel>
                     </TabPanels>
                 </TabGroup>

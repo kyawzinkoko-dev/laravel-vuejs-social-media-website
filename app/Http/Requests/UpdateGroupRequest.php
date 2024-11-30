@@ -30,4 +30,11 @@ class UpdateGroupRequest extends FormRequest
             'auto_approve' => ['required', 'boolean']
         ];
     }
+    protected function prepareForValidation()
+    {
+        return $this->merge([
+            'about'=>nl2br($this->about)
+        ]);
+    }
+    
 }

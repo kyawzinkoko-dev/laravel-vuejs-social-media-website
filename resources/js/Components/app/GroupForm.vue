@@ -12,8 +12,8 @@
     </div>
     <div class="mb-3">
         <label>About Group</label>
-        <TextInput type="text" v-model="form.about" class="mt-2 block w-full" required autofocus
-            :autocomplete="form.about" placeholder="About group" />
+        <textarea type="text" v-model="form.about" class="mt-2 block w-full rounded border-gray-300 focus:border-gray-400 shadow p-2" required autofocus
+            :autocomplete="form.about" placeholder="About group" ></textarea>
     </div>
 </template>
 
