@@ -7,8 +7,8 @@
                 <h3 class="font-semibold text-lg">{{  group.name }}</h3>
                 <p class="text-gray-900">{{ group.role==="admin" ?group.role:"" }}</p>
             </div>
-            <div class="text-gray-700">
-               {{ group.description }}
+            <div v-html="group.description" class="text-gray-700">
+               
             </div>
         </div>
     </Link>

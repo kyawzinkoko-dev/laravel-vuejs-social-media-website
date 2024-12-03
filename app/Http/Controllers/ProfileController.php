@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Resources\UserResource;
+use App\Models\Followers;
 use App\Models\User;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -17,18 +18,31 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    
+
     /**
      * 
      * 
      */
-    public function index(User $user){
-            
-        return Inertia::render('Profile/View',[
-            'mustVerifyEmail'=>$user instanceof MustVerifyEmail,
-            'status'=>session('status'),
-            'success'=>session('success'),
-            'user'=>new UserResource($user)
+    public function index(User $user)
+    {
+        $isCurrentUserFollower = false;
+        if (!Auth::guest()) {
+            $follow = Followers::where('user_id', $user->id)
+                ->where('follower_id', Auth::id())
+                ->exists();
+            if ($follow) {
+                $isCurrentUserFollower = true;
+            }
+        }
+        $followerCount = Followers::query()->where('user_id',$user->id)->count();
+       // dd($isCurrentUserFollower);
+        return Inertia::render('Profile/View', [
+            'mustVerifyEmail' => $user instanceof MustVerifyEmail,
+            'status' => session('status'),
+            'success' => session('success'),
+            'isCurrentUserFollower' => $isCurrentUserFollower,
+            'followerCount'=>$followerCount,
+            'user' => new UserResource($user)
         ]);
     }
 
@@ -36,35 +50,34 @@ class ProfileController extends Controller
      * 
      * update proiffile
      */
-    public function updateImage(Request $request){
-        $data=($request->validate([
-            'cover'=>['nullable','image'],
-            'avatar'=>['nullable', 'image']
+    public function updateImage(Request $request)
+    {
+        $data = ($request->validate([
+            'cover' => ['nullable', 'image'],
+            'avatar' => ['nullable', 'image']
         ]));
-       $cover = $data['cover'] ?? null;
-       /** @var \Illuminate\Http\UploadedFile  $cover*/
-       $avatar = $data['avatar'] ?? null;
-        $user= $request->user();
-        $success='';
-       if($cover){
-        if($user->cover_path){
-            Storage::disk('public')->delete($user->cover_path);
+        $cover = $data['cover'] ?? null;
+        /** @var \Illuminate\Http\UploadedFile  $cover*/
+        $avatar = $data['avatar'] ?? null;
+        $user = $request->user();
+        $success = '';
+        if ($cover) {
+            if ($user->cover_path) {
+                Storage::disk('public')->delete($user->cover_path);
+            }
+            $path = $cover->store('user-cover' . $user->id, 'public');
+            $user->update(['cover_path' => $path]);
+            $success = 'You cover photo was updated';
         }
-        $path = $cover->store('user-cover'.$user->id,'public');
-        $user->update(['cover_path'=>$path]);
-        $success = 'You cover photo was updated';
-       }
-       if($avatar){
-        if($user->avatar_path){
-            Storage::disk('public')->delete($user->avatar_path);
+        if ($avatar) {
+            if ($user->avatar_path) {
+                Storage::disk('public')->delete($user->avatar_path);
+            }
+            $path = $avatar->store('user-avatar-' . $user->id, 'public');
+            $user->update(['avatar_path' => $path]);
+            $success = 'You avatar was updated';
         }
-        $path = $avatar->store('user-avatar-'.$user->id,'public');
-        $user->update(['avatar_path'=>$path]);
-        $success='You avatar was updated';
-       }
-       return back()->with('success',$success);
-       
-       
+        return back()->with('success', $success);
     }
 
     /**

@@ -2,7 +2,7 @@
     <div class="flex items-center gap-2 ">
         <Link :href="route('profile', post.user.username)">
             <img :src="post.user.avatar_url"
-                 class="w-[40px] rounded-full  border-2 transition-all hover:border-blue-500"/>
+                 class="w-[40px] rounded-full h-full border-2 transition-all hover:border-blue-500"/>
         </Link>
         <div>
             <h4 class="flex items-center font-bold">

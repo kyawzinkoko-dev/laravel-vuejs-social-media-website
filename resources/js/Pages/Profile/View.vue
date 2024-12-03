@@ -105,7 +105,11 @@
                     </div>
 
                     <div class="flex-1 flex justify-between items-center p-4">
-                        <h2 class="font-bold text-lg">{{ user.name }}</h2>
+                        <div class="">
+                            <h2 class="font-bold text-lg">{{ user.name }}</h2>
+                            <h3 class="text-xs text-gray-500 ">{{ followerCount }} followers</h3>
+                        </div>
+                       
                         <PrimaryButton v-if="isMyProfile">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -124,6 +128,15 @@
 
                             Edit Profile</PrimaryButton
                         >
+                        <template v-else>
+                            <PrimaryButton v-if="!isCurrentUserFollower" @click="followUser"  >
+                            Follow user
+                        </PrimaryButton>
+                        <DangerButton v-else @click="followUser"  >
+                            Unfollow user
+                        </DangerButton>
+                        </template>
+                        
                     </div>
                 </div>
             </div>
@@ -185,6 +198,7 @@ import Edit from "./Edit.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { CameraIcon, XMarkIcon, CheckIcon } from "@heroicons/vue/24/outline";
+import DangerButton from "@/Components/DangerButton.vue";
 
 const props = defineProps({
     errors: Object,
@@ -194,9 +208,13 @@ const props = defineProps({
     status: {
         type: String,
     },
+    isCurrentUserFollower:{
+        type:Boolean
+    },
     user: {
         type: Object,
     },
+    followerCount:Number,
     success: {
         type: String,
     },
@@ -283,5 +301,11 @@ const submitCoverImage = () => {
         },
     });
 };
+
+const followUser = () =>{
+    const form = useForm({
+    follow:!props.isCurrentUserFollower})
+    form.post(route('user.follow',props.user),{preserveScroll:true})
+}
 </script>
 <style lang="scss" scoped></style>
