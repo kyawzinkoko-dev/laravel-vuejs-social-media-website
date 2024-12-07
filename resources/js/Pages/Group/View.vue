@@ -165,7 +165,10 @@
                         <TabPanel class=" ">
                             <div v-if="posts">
                                 <CreatePost :group="group" />
-                                <PostList :posts="posts.data" />
+                                <PostList v-if="posts.data.length" :posts="posts.data" />
+                                <div v-else class="text-center ">
+                                    Don't have any post createt. Be the first and create post
+                                </div>
                             </div>
                             <div v-else class="text-center text-xl">
                                 You don't have permission to view posts

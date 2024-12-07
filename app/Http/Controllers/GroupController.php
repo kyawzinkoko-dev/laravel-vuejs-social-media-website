@@ -44,13 +44,14 @@ class GroupController extends Controller
             $posts = Post::postForTimeline($userId)
         ->where('group_id',$group->id)
         ->paginate(2);
+        $posts = PostResource::collection($posts);
         }
         else{
             $posts = null;
         }
         
         if($request->wantsJson()){
-            return PostResource::collection($posts);
+            return $posts;
         }
 
         $user = User::query()
@@ -64,7 +65,7 @@ class GroupController extends Controller
         $pendingUser = $group->pendingUser()->orderBy('name')->get();
         return Inertia::render("Group/View", [
             //'status'=>
-            'posts'=>$posts ?  PostResource::collection($posts) : null,
+            'posts'=>$posts,
             'group' => new GroupResource($group),
             'users' => GroupUserResource::collection($user),
             'pendingUsers' => UserResource::collection($pendingUser),

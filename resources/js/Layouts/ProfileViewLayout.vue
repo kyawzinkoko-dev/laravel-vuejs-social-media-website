@@ -4,11 +4,12 @@
         <div
             class="w-[768px] container mx-auto bg-gray-100 h-full overflow-auto"
         >
+        
             <div
                 v-show="showNotification && success"
                 class="py-2 transition-opacity opacity-100 px-3 my-2 text-white rounded-sm bg-emerald-500 text-sm"
             >
-                {{ success }}
+            {{ success }}
             </div>
             <div
                 v-if="showNotification && errors.cover"
@@ -22,8 +23,9 @@
                         coverImageSrc ||
                         user.cover_url ||
                         '/img/default_cover.webp'
+                        
                     "
-                    class="h-[200px] object-cover w-full"
+                    class="h-[200px] object-cover  w-full"
                 />
                 <div class="absolute top-2 right-2">
                     <button
@@ -59,13 +61,14 @@
                 </div>
                 <div class="flex">
                     <div
-                        class="relative group/avatar ml-[48px] w-[128px] h-[128px] -mt-[64px] flex items justify-center"
+                    
+                        class=" relative group/avatar ml-[48px] w-[128px] h-[128px] -mt-[64px] flex items justify-center"
                     >
                         <img
                             :src="
                                 avatarImageSc ||
                                 user.avatar_url ||
-                                '/img/avatar.png'
+                               '/img/avatar.png'    
                             "
                             class="rounded-full object-cover w-full h-full"
                         />
@@ -104,11 +107,9 @@
                     <div class="flex-1 flex justify-between items-center p-4">
                         <div class="">
                             <h2 class="font-bold text-lg">{{ user.name }}</h2>
-                            <h3 class="text-xs text-gray-500">
-                                {{ followerCount }} followers
-                            </h3>
+                            <h3 class="text-xs text-gray-500 ">{{ followerCount }} followers</h3>
                         </div>
-
+                       
                         <PrimaryButton v-if="isMyProfile">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -128,16 +129,14 @@
                             Edit Profile</PrimaryButton
                         >
                         <template v-else>
-                            <PrimaryButton
-                                v-if="!isCurrentUserFollower"
-                                @click="followUser"
-                            >
-                                Follow user
-                            </PrimaryButton>
-                            <DangerButton v-else @click="followUser">
-                                Unfollow user
-                            </DangerButton>
+                            <PrimaryButton v-if="!isCurrentUserFollower" @click="followUser"  >
+                            Follow user
+                        </PrimaryButton>
+                        <DangerButton v-else @click="followUser"  >
+                            Unfollow user
+                        </DangerButton>
                         </template>
+                        
                     </div>
                 </div>
             </div>
@@ -167,50 +166,12 @@
                     </TabList>
 
                     <TabPanels class="mt-2">
-                        <TabPanel class="">
-                            <CreatePost />
-                            <PostList :posts="posts.data" />
+                        <TabPanel class="bg-white p-3 shadow"> Posts </TabPanel>
+                        <TabPanel class="bg-white p-3 shadow">
+                            Followers
                         </TabPanel>
-                        <TabPanel class="">
-                            <TextInput
-                                class="w-full mb-3"
-                                placeholder="Search user"
-                                v-model="searchFollowersKeyword"
-                            />
-                            <div
-                                v-if="followers.length"
-                                class="grid grid-cols-2 gap-3"
-                            >
-                                <UserListItem
-                                    class="rounded-lg shadow"
-                                    v-for="follower of followers"
-                                    :user="follower"
-                                    v-model="searchFollowersKeyword"
-                                />
-                            </div>
-                            <div v-else class="py-4 text-center">
-                                User doesn't have any follower
-                            </div>
-                        </TabPanel>
-                        <TabPanel class="">
-                            <TextInput
-                                class="w-full mb-3"
-                                placeholder="Search user"
-                                v-model="searchFollowingsKeyword"
-                            />
-                            <div
-                                v-if="followings.length"
-                                class="grid grid-cols-2 gap-3"
-                            >
-                                <UserListItem
-                                    class="rounded-lg shadow-sm"
-                                    v-for="following of followings"
-                                    :user="following"
-                                />
-                            </div>
-                            <div v-else class="py-4 text-center">
-                                User doesn't have any following
-                            </div>
+                        <TabPanel class="bg-white p-3 shadow">
+                            Following
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
                             Photos
@@ -229,7 +190,7 @@
 </template>
 
 <script setup>
-import { usePage, Head, useForm } from "@inertiajs/vue3";
+import { usePage, Head, router, useForm } from "@inertiajs/vue3";
 import { computed, ref } from "vue";
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/vue";
 import TabItem from "./Partials/TabItem.vue";
@@ -238,10 +199,6 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { CameraIcon, XMarkIcon, CheckIcon } from "@heroicons/vue/24/outline";
 import DangerButton from "@/Components/DangerButton.vue";
-import CreatePost from "@/Components/app/CreatePost.vue";
-import PostList from "@/Components/app/PostList.vue";
-import UserListItem from "@/Components/app/UserListItem.vue";
-import TextInput from "@/Components/TextInput.vue";
 
 const props = defineProps({
     errors: Object,
@@ -251,27 +208,21 @@ const props = defineProps({
     status: {
         type: String,
     },
-    isCurrentUserFollower: {
-        type: Boolean,
+    isCurrentUserFollower:{
+        type:Boolean
     },
     user: {
         type: Object,
     },
-    followerCount: Number,
-    followings: Array,
-    followers: Array,
-    posts: Object,
+    followerCount:Number,
     success: {
         type: String,
     },
 });
 
-
 const authUser = usePage().props.auth.user;
 const coverImageSrc = ref("");
 const avatarImageSc = ref("");
-const searchFollowingsKeyword = ref("");
-const searchFollowersKeyword = ref("");
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id);
 const imageFile = useForm({
     cover: null,
@@ -311,17 +262,19 @@ const cancelAvataImage = () => {
 };
 const submitAvatarImage = () => {
     console.log("avatar submited");
-    imageFile.post(route("profile.updateImage"), {
-        preserveScroll: true,
+    imageFile.post(route("profile.updateImage"),  {
+        preserveScroll:true,
         onSuccess: () => {
             cancelAvataImage();
             setTimeout(() => {
                 showNotification.value = false;
+               
             }, 3000);
         },
         onError: () => {
             setTimeout(() => {
                 showNotification.value = false;
+               
             }, 3000);
         },
     });
@@ -330,27 +283,29 @@ const submitAvatarImage = () => {
 const submitCoverImage = () => {
     console.log("cover submitted");
     imageFile.post(route("profile.updateImage"), {
-        preserveScroll: true,
+        preserveScroll:true,
         onSuccess: () => {
             cancelCoverImge();
-
+           
             setTimeout(() => {
                 showNotification.value = false;
+               
             }, 3000);
         },
         onError: () => {
+           
             setTimeout(() => {
                 showNotification.value = false;
+              
             }, 3000);
         },
     });
 };
 
-const followUser = () => {
+const followUser = () =>{
     const form = useForm({
-        follow: !props.isCurrentUserFollower,
-    });
-    form.post(route("user.follow", props.user), { preserveScroll: true });
-};
+    follow:!props.isCurrentUserFollower})
+    form.post(route('user.follow',props.user),{preserveScroll:true})
+}
 </script>
 <style lang="scss" scoped></style>

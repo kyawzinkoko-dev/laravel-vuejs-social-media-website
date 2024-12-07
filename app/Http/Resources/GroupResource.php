@@ -23,7 +23,7 @@ class GroupResource extends JsonResource
             'role' => $this->currentUserGroup?->role,
             'status' => $this->currentUserGroup?->status,
             'auto_approve' => $this->auto_approve,
-            'description' => Str::words($this->about, 5),
+            'description' => Str::words(strip_tags($this->about),5),
             'thumbnail_url' => $this->thumbnail_path ? Storage::url($this->thumbnail_path)  : '/img/default_background.jpeg',
             'cover_url' => $this->cover_path ? Storage::url($this->cover_path)  : '/img/default_background.jpeg',
             'created_at' => $this->created_at,
