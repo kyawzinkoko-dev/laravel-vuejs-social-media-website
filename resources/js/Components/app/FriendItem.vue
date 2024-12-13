@@ -29,9 +29,12 @@
                             />
                         </svg>
                     </div>
+                   
                 </DisclosureButton>
                 <DisclosurePanel>
-                    <FollowingListItem  v-for="following of followings" :following="following"/>
+                    
+                    <FollowingListItem  :followings="followings"/>
+                    
                 </DisclosurePanel>
             </Disclosure>
         </div>
@@ -39,7 +42,7 @@
             <h2 class="text-2xl font-bold flex items-center justify-center">
                 My Following
             </h2>
-            <FollowingListItem v-for="following of followings" :following="following" />
+            <FollowingListItem :followings="followings" />
         </div>
     </div>
 </template>

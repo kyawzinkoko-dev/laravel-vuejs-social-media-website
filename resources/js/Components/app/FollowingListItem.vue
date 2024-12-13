@@ -5,11 +5,11 @@
         v-model="searchKeywork"
     />
     <div class=" overflow-auto flex-1 lg:h-full h-[200px] ">
-        <div v-if="!following" class="text-gray-400 mt-3 flex justify-center">
+        <div v-if="!followings" class="text-gray-400 mt-3 flex justify-center">
             You do not follow anyone now
         </div>
         <div v-else class="mt-3">
-        <FollowingList :title="following.name" :image="following.avatar_url"/>
+        <FollowingList v-for="following of followings" :user="following"/>
         
             </div>
     </div>
@@ -21,7 +21,7 @@ import { ref } from "vue";
 import FollowingList from "./FollowingList.vue";
 
 const props = defineProps({
-    following:Object
+    followings:Array
 })
 console.log(props.following)
 const searchKeywork = ref("");

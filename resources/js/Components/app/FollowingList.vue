@@ -1,18 +1,17 @@
 <template>
-    <div class="flex items-center gap-3 mb-3  hover:bg-gray-100 py-2 px-3 rounded">
-        <img :src="image" class="rounded-full w-[40px]" />
+    <a :href="route('profile',user)" class="flex items-center gap-3 mb-3  hover:bg-gray-100 py-2 px-3 rounded">
+        <img :src="user.avatar_url" class="rounded-full w-[40px]" />
         <div>
-            <h3 class="font-semibold text-lg">{{ title }}</h3>
+            <h3 class="font-semibold text-lg">{{ user.name }}</h3>
             
         </div>
-    </div>
+    </a>
 </template>
 
 <script setup>
-    defineProps({
-        image:String,
-        title:String
-    })
+   defineProps({
+    user:Object
+   })
 </script>
 
 <style lang="scss" scoped>
