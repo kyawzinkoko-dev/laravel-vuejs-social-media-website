@@ -58,9 +58,10 @@ class PostController extends Controller
             DB::commit();
             $group = $post->group;
             if($group){
-                Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$group));
+                Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$user,$group));
             }
-           
+           $followers = $user->followers;
+           Notification::send($followers,new PostCreated($post,$user,null));
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);

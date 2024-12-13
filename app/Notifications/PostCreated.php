@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\Group;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -16,7 +17,7 @@ class PostCreated extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Post $post,public Group $group)
+    public function __construct(public Post $post,public ?User $user=null,public ?Group $group=null)
     {
         //
     }
@@ -36,8 +37,10 @@ class PostCreated extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        //dd($this->group);
         return (new MailMessage)
-                    ->line('Post added in group "'.$this->group->slug.'"')
+                    ->lineIf(!!$this->group,'User "'.$this->user->name.'" added a new post in group  "'.$this->group?->slug.'"')
+                    ->lineIf(!$this->group,'User "'.$this->user->name.'" added a new post ')
                     ->action('View Post', url(route('post.view',$this->post->id)))
                     ->line('Thank you for using our application!');
     }

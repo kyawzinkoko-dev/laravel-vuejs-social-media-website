@@ -31,7 +31,7 @@
                     </div>
                 </DisclosureButton>
                 <DisclosurePanel>
-                    <FollowingListItem />
+                    <FollowingListItem  v-for="following of followings" :following="following"/>
                 </DisclosurePanel>
             </Disclosure>
         </div>
@@ -39,7 +39,7 @@
             <h2 class="text-2xl font-bold flex items-center justify-center">
                 My Following
             </h2>
-            <FollowingListItem />
+            <FollowingListItem v-for="following of followings" :following="following" />
         </div>
     </div>
 </template>
@@ -47,7 +47,9 @@
 <script setup>
 import FollowingListItem from "./FollowingListItem.vue";
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-
+defineProps({
+    followings:Array
+})
 
 </script>
 

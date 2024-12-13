@@ -7,7 +7,7 @@
                 <GroupList :groups="groups" />
             </div>
             <div class="lg:col-span-3 gap-6 lg:order-3 h-full overflow-auto">
-                <FriendItem class=""/>
+                <FriendItem :followings = "followings" />
             </div>
             <div class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col">
                <CreatePost />
@@ -30,7 +30,8 @@ const page = usePage().props;
 
 const prop= defineProps({
     posts: { type: Object,  },
-    groups:{type:Array}
+    groups:{type:Array},
+    followings : { type: Array}
 })
 
 </script>

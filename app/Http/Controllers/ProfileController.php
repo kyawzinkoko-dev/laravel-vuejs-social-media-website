@@ -45,16 +45,9 @@ class ProfileController extends Controller
         if($request->wantsJson()){
             return $posts;
         }
-        $follower = User::query()
-        ->select('users.*')
-        ->join('followers','followers.follower_id','users.id')
-        ->where('followers.user_id',$user->id)
-        ->get();
-        $following = User::query()
-        ->select('users.*')
-        ->join('followers','followers.user_id','users.id')
-        ->where('followers.follower_id',$user->id)
-        ->get();
+        $follower = $user->followers;
+
+        $following = $user->followings;
        //dd($following);
         return Inertia::render('Profile/View', [
             'mustVerifyEmail' => $user instanceof MustVerifyEmail,
