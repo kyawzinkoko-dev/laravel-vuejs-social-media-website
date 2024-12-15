@@ -213,7 +213,7 @@
                             </div>
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
-                            Photos
+                            <TabPhotos :photos="photos"/>
                         </TabPanel>
                         <TabPanel class="" v-if="isMyProfile">
                             <Edit
@@ -226,6 +226,7 @@
             </div>
         </div>
     </AuthenticatedLayout>
+   
 </template>
 
 <script setup>
@@ -242,6 +243,8 @@ import CreatePost from "@/Components/app/CreatePost.vue";
 import PostList from "@/Components/app/PostList.vue";
 import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
+import TabPhotos from "./TabPhotos.vue";
+import AttachmentPreviewModal from "@/Components/app/AttachmentPreviewModal.vue";
 
 const props = defineProps({
     errors: Object,
@@ -264,6 +267,7 @@ const props = defineProps({
     success: {
         type: String,
     },
+    photos:Array
 });
 
 
@@ -273,6 +277,7 @@ const avatarImageSc = ref("");
 const searchFollowingsKeyword = ref("");
 const searchFollowersKeyword = ref("");
 const isMyProfile = computed(() => authUser && authUser.id === props.user.id);
+
 const imageFile = useForm({
     cover: null,
     avatar: null,
@@ -352,5 +357,7 @@ const followUser = () => {
     });
     form.post(route("user.follow", props.user), { preserveScroll: true });
 };
+
+
 </script>
 <style lang="scss" scoped></style>

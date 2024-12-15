@@ -221,7 +221,7 @@
                             </div>
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
-                            Photos
+                           <GroupTabPhotos :photos="photos"/>
                         </TabPanel>
                         <TabPanel class="bg-white p-3 shadow">
                             <div v-if="isCurrentUserAdmin" class="m-4">
@@ -267,6 +267,7 @@ import UserListItem from "@/Components/app/UserListItem.vue";
 import TextInput from "@/Components/TextInput.vue";
 import GroupForm from "@/Components/app/GroupForm.vue";
 import CreatePost from "@/Components/app/CreatePost.vue";
+import GroupTabPhotos from "./GroupTabPhotos.vue";
 
 const props = defineProps({
     group: {
@@ -285,6 +286,9 @@ const props = defineProps({
     pendingUsers: {
         type: Array,
     },
+    photos:{
+        type:Array
+    }
 });
 
 const thumbnailImageSc = ref("");

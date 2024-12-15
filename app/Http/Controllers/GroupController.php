@@ -9,11 +9,13 @@ use App\Http\Requests\StoreGroupRequest;
 use App\Http\Requests\UpdateGroupRequest;
 use App\Http\Resources\GroupResource;
 use App\Http\Resources\GroupUserResource;
+use App\Http\Resources\PostAttachmentResource;
 use App\Http\Resources\PostResource;
 use App\Http\Resources\UserResource;
 use App\Models\Group;
 use App\Models\GroupUser;
 use App\Models\Post;
+use App\Models\PostAttachment;
 use App\Models\User;
 use App\Notifications\GroupUserRemoved;
 use App\Notifications\InvitationApproved;
@@ -21,7 +23,9 @@ use App\Notifications\InvitationInGroup;
 use App\Notifications\RequestApproved;
 use App\Notifications\RequestToJoinGroup;
 use App\Notifications\RoleChanged;
+
 use Illuminate\Http\Request;
+use Illuminate\Mail\Attachment;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +65,16 @@ class GroupController extends Controller
         ->where('group_id',$group->id)
         ->orderBy('users.name')
         ->get();
-        //dd($user);
+
+        //
+        $photos =PostAttachment::query()
+        ->select('post_attachments.*')
+        ->join('posts as p','p.id','post_attachments.post_id')
+        ->where('p.group_id',$group->id)
+        ->where('mime','like','image/%')
+        ->latest()
+        ->get();
+     //   dd($photos);
         $pendingUser = $group->pendingUser()->orderBy('name')->get();
         return Inertia::render("Group/View", [
             //'status'=>
@@ -69,7 +82,8 @@ class GroupController extends Controller
             'group' => new GroupResource($group),
             'users' => GroupUserResource::collection($user),
             'pendingUsers' => UserResource::collection($pendingUser),
-            'success' => session('success')
+            'success' => session('success'),
+            'photos'=> PostAttachmentResource::collection($photos)
         ]);
     }
 

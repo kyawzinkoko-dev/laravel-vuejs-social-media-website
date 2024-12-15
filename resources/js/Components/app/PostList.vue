@@ -10,8 +10,9 @@ const authUser = usePage().props.auth.user;
 const page = usePage();
 const showEditModal = ref(false);
 const showAttachmentModal = ref(false);
+const previewAttachmentPost = ref({})
 const editPost = ref({});
-const previewAttachmentPost = ref({});
+;
 const loadMoreInterset = ref(null);
 const allPost = ref({
     data: [],
