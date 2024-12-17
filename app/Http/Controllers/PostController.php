@@ -25,6 +25,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class PostController extends Controller
 {
@@ -57,11 +58,11 @@ class PostController extends Controller
             }
             DB::commit();
             $group = $post->group;
-            if($group){
-                Notification::send($group->approvedUser->where('id','!=',$user->id),new PostCreated($post,$user,$group));
+            if ($group) {
+                Notification::send($group->approvedUser->where('id', '!=', $user->id), new PostCreated($post, $user, $group));
             }
-           $followers = $user->followers;
-           Notification::send($followers,new PostCreated($post,$user,null));
+            $followers = $user->followers;
+            Notification::send($followers, new PostCreated($post, $user, null));
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);
@@ -114,7 +115,6 @@ class PostController extends Controller
                 ]);
             }
             DB::commit();
-            
         } catch (\Exception $e) {
             foreach ($allFiles as $path) {
                 Storage::disk('public')->delete($path);
@@ -134,10 +134,10 @@ class PostController extends Controller
     {
         $id = Auth::id();
         if ($post->group && $post->group->isAdmin($id) || $post->isOwner($id)) {
-           // dd($id);
+            // dd($id);
             $post->delete();
-            if(!$post->isOwner($id)){
-              //  dd('ere');
+            if (!$post->isOwner($id)) {
+                //  dd('ere');
                 $post->user->notify(new PostDeleted($post->group));
             }
             return back();
@@ -173,8 +173,8 @@ class PostController extends Controller
                 'type' => $data['reaction']
             ]);
             $user = $post->user;
-            if(!$post->isOwner($userId)){
-            $user->notify(new ReactionAddedOnPost($post,Auth::user()));
+            if (!$post->isOwner($userId)) {
+                $user->notify(new ReactionAddedOnPost($post, Auth::user()));
             }
         }
 
@@ -199,8 +199,8 @@ class PostController extends Controller
             'comment' =>  nl2br($data['comment']),
             'parent_id' => $data['parent_id']
         ]);
-        $post =$comment->post;
-        $post->user->notify(new CommentCreated($comment,$post));
+        $post = $comment->post;
+        $post->user->notify(new CommentCreated($comment, $post));
         return response(new CommentResource($comment), 201);
     }
     public function deleteComment(Comment $comment)
@@ -209,8 +209,8 @@ class PostController extends Controller
         $post = $comment->post;
         if ($comment->isOwner($userId) || $post->isOwner($userId)) {
             $comment->delete();
-            if(!$comment->isOwner($userId)){
-                $comment->user->notify(new CommentDeleted($comment,$post));
+            if (!$comment->isOwner($userId)) {
+                $comment->user->notify(new CommentDeleted($comment, $post));
             }
             return response('', 204);
         }
@@ -241,9 +241,9 @@ class PostController extends Controller
         $reaction = Reaction::query()
             ->where('object_id', $comment->id)
             ->where('object_type', Comment::class)
-            ->where('user_id',$userId)
+            ->where('user_id', $userId)
             ->first();
-            //dd($reaction);
+        //dd($reaction);
         if ($reaction) {
             $hasReaction = false;
             $reaction->delete();
@@ -256,10 +256,9 @@ class PostController extends Controller
                 'type' => $data['reaction']
             ]);
             $user = $comment->user;
-            if(!$comment->isOwner($userId)){
-            $user->notify(new ReactionAddedOnComment(Auth::user(),$comment,$comment->post));
+            if (!$comment->isOwner($userId)) {
+                $user->notify(new ReactionAddedOnComment(Auth::user(), $comment, $comment->post));
             }
-
         }
         $reactionCount = Reaction::where('object_id', $comment->id)->where('object_type', Comment::class)->count();
         return response([
@@ -267,15 +266,32 @@ class PostController extends Controller
             'num_of_reactions' => $reactionCount
         ]);
     }
-    public function view(Post $post){
+    public function view(Post $post)
+    {
         $post->loadCount('reactions');
         $post->load([
-            'comments'=> function($query){
+            'comments' => function ($query) {
                 $query->withCount('reactions');
             }
         ]);
-        return Inertia::render('Post/View',[
-            'post'=>new PostResource($post)
+        return Inertia::render('Post/View', [
+            'post' => new PostResource($post)
         ]);
+    }
+
+    public function aiPostContent(Request $request)
+    {
+        $prompt = $request->get('prompt');
+        $result = OpenAI::chat()->create([
+            'model' => 'gpt-3.5-turbo',
+            'messages' => [
+                [
+                    'role' => 'user',
+                    'content' => 'Please generate the social media content base on the following prompt' . PHP_EOL . PHP_EOL . $prompt
+                ],
+            ],
+        ]);
+
+        echo $result->choices[0]->message->content;
     }
 }

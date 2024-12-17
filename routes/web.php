@@ -4,11 +4,12 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-
+use PHPUnit\Framework\Attributes\PostCondition;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -55,18 +56,24 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{post}', [PostController::class, 'destroy'])->name('post.destroy');
         Route::get('/download/{attachment}', [PostController::class, 'downloadAttachments'])->name('post.download');
         Route::post('/{post}/reaction', [PostController::class, 'postReaction'])->name('post.reaction');
+
         //commentcreate
         Route::post('/{post}/comment', [PostController::class, 'createComment'])->name('comment.create');
-    });
+         });
     //comment
   Route::prefix('comment')->group(function(){
     Route::delete('/{comment}', [PostController::class, 'deleteComment'])->name('comment.delete');
     Route::put('/{comment}', [PostController::class, 'updateComment'])->name('comment.update');
     Route::post('/reaction/{comment}', [PostController::class, 'commentReaction'])->name('comment.reaction');
   }); 
+   //global search 
+   Route::get('/search/{search?}',[SearchController::class,'search'])->name('search');
+  
    
   //user controller 
   Route::post('/user/follow/{user}',[UserController::class,'follow'])->name('user.follow');
+
+  
 });
 
 

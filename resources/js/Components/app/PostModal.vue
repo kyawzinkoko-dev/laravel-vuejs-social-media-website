@@ -34,7 +34,9 @@
                                     as="h3"
                                     class="bg-gray-200 font-medium leading-6 text-gray-900 py-3 px-4 flex items-center justify-between"
                                 >
-                                    {{ post.id ? "Update Post" : "Create Post" }}
+                                    {{
+                                        post.id ? "Update Post" : "Create Post"
+                                    }}
                                     <button
                                         @click="closeModal"
                                         class="rounded-full p-2 hover:bg-gray-400"
@@ -42,20 +44,27 @@
                                         <XMarkIcon class="w-4 h-4" />
                                     </button>
                                 </DialogTitle>
-                                <div class=" p-3">
+                                <div class="p-3">
                                     <PostHeaderUser
                                         :post="post"
                                         :show-time="false"
                                         class="mb-3"
                                     />
-                                    <div v-if="error.group_id" class="bg-red-400 text-white py-1 px-3 mb-3 rounded ">{{ error.group_id }}</div>
+                                   
+                                    <div
+                                        v-if="error.group_id"
+                                        class="bg-red-400 text-white py-1 px-3 mb-3 rounded"
+                                    >
+                                        {{ error.group_id }}
+                                    </div>
                                     <ckeditor
                                         :editor="editor"
                                         v-model="form.body"
                                         :config="editorConfig"
                                     ></ckeditor>
-                                    <div 
-                                    v-if="showExtansionWarning"
+                                 
+                                    <div
+                                        v-if="showExtansionWarning"
                                         class="py-2 px-2 border-l-4 border-amber-600 bg-amber-100 my-2"
                                     >
                                         File must be one of these extansion
@@ -64,7 +73,10 @@
                                             {{ attachmentExtansion.join(", ") }}
                                         </small>
                                     </div>
-                                    <div v-if="error.attachments" class="py-2 px-3 border-l-4 border-red-600 bg-red-100 my-2">
+                                    <div
+                                        v-if="error.attachments"
+                                        class="py-2 px-3 border-l-4 border-red-600 bg-red-100 my-2"
+                                    >
                                         {{ error.attachments }}
                                     </div>
                                     <div
@@ -211,9 +223,10 @@ import {
 } from "@heroicons/vue/24/outline";
 import PostHeaderUser from "./PostHeaderUser.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
-import {isImage} from '@/helper.js'
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { isImage } from "@/helper.js";
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
+import axiosClient from "@/axiosClient";
 const editor = ClassicEditor;
 
 const editorConfig = {
@@ -241,11 +254,8 @@ const props = defineProps({
         type: Object,
         required: false,
     },
-    group:{type:Object,
-        default:null
-    },
+    group: { type: Object, default: null },
     modelValue: Boolean,
-    
 });
 
 /**
@@ -257,13 +267,13 @@ const props = defineProps({
  */
 
 const attachmentFiles = ref([]);
-//show type of file extansions that are allowed as a warning if a user chose wrong file type 
+//show type of file extansions that are allowed as a warning if a user chose wrong file type
 const attachmentError = ref([]);
 
-//the error for total size of selected attachment file  
-const error = ref({})
+//the error for total size of selected attachment file
+const error = ref({});
 
-//get the newly selected atachment and existing attachments of the post to update 
+//get the newly selected atachment and existing attachments of the post to update
 const computedAttachments = computed(() => {
     if (props.post) {
         return [...attachmentFiles.value, ...(props.post.attachments || [])];
@@ -271,20 +281,20 @@ const computedAttachments = computed(() => {
     return attachmentFiles.value;
 });
 
-//show extansion warning 
-const showExtansionWarning = computed(()=>{
+//show extansion warning
+const showExtansionWarning = computed(() => {
     for (const myFile of attachmentFiles.value) {
         let file = myFile.file;
-        let parts = file.name.split('.');
-        let ext = parts.pop().toLowerCase()
-        if(!attachmentExtansion.includes(ext)){
-            return true
+        let parts = file.name.split(".");
+        let ext = parts.pop().toLowerCase();
+        if (!attachmentExtansion.includes(ext)) {
+            return true;
         }
     }
-        return false
-})
+    return false;
+});
 
-//watch post changes 
+//watch post changes
 watch(
     () => props.post,
     () => {
@@ -312,21 +322,19 @@ function closeModal() {
 const form = useForm({
     id: "",
     body: "",
-    group_id:null,
+    group_id: null,
     attachments: [],
     delete_file_ids: [],
     _method: "POST",
-    
 });
 
 //update  or create post
 const submit = () => {
-    
     form.attachments = attachmentFiles.value.map((myFile) => myFile.file);
-    if(props.group){
-        form.group_id = props.group.id
+    if (props.group) {
+        form.group_id = props.group.id;
     }
-   
+
     if (props.post.id) {
         form._method = "PUT";
         form.post(route("post.update", props.post), {
@@ -336,11 +344,10 @@ const submit = () => {
             },
             onError: (errors) => {
                 processErrors(errors);
-               
             },
         });
     } else {
-            form.post(route("post.create"), {
+        form.post(route("post.create"), {
             preserveScroll: true,
             onSuccess: () => {
                 closeModal();
@@ -349,29 +356,26 @@ const submit = () => {
                 processErrors(e);
             },
         });
-        }
-        
-    
+    }
 };
 
 //function to validate exansion of atachments
 function processErrors(errors) {
-    console.log(errors)
+    console.log(errors);
     for (const key in errors) {
         if (key.includes(".")) {
             const [, index] = key.split(".");
             attachmentError.value[index] = errors[key];
-        }
-        else{
-            console.log(errors)
-            error.value = errors
+        } else {
+            console.log(errors);
+            error.value = errors;
         }
     }
 }
 //close the modal and reset the selected attachments
 function resetModal() {
     form.reset();
-    error.value = {}
+    error.value = {};
     attachmentFiles.value = [];
     if (props.post.atachments) {
         props.post.attachments.forEach((file) => (file.deleted = false));
@@ -380,14 +384,14 @@ function resetModal() {
 
 //attachment preview
 async function onAttachmentChange(e) {
-    for(let file of e.target.files){
+    for (let file of e.target.files) {
         const myFile = {
-           file ,
+            file,
             url: await readFile(file),
         };
         attachmentFiles.value.push(myFile);
     }
-        
+
     e.target.value = null;
 }
 //get the base64 url of the selectd attchment
@@ -414,7 +418,6 @@ function resetMyFile(myFile) {
     if (myFile.file) {
         attachmentFiles.value = attachmentFiles.value.filter(
             (f) => f != myFile
-           
         );
     } else {
         form.delete_file_ids.push(myFile.id);
@@ -427,4 +430,5 @@ function undoDelete(myFile) {
     myFile.deleted = false;
     form.delete_file_ids = form.delete_file_ids.filter((id) => id != myFile.id);
 }
+
 </script>

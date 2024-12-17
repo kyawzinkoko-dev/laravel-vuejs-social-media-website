@@ -10,6 +10,7 @@
         "laravel/framework": "^11.9",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
+        "openai-php/laravel": "^0.10.2",
         "spatie/laravel-sluggable": "^3.6",
         "tightenco/ziggy": "^2.0"
     },

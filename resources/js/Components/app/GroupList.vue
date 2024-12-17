@@ -55,6 +55,7 @@
             </div>
 
             <GroupListItem :groups="groups" />
+            
         </div>
         <GroupModal v-model="showCreateGroupModal" @create-group="onCreateGroup" />
     </div>
