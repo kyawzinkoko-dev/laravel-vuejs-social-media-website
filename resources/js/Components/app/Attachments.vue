@@ -24,6 +24,11 @@
                 :src="attachment.url"
                 class="h-full w-full object-cover aspect-square"
             />
+            <div v-else-if="isVideo(attachment)" class=" relative flex justify-center items-center">
+                <PlayCircleIcon class="w-20 h-20 absolute z-20 text-white opacity-45"/>
+                <div class="absolute top-0 left-0 z-10 w-full h-full bg-black/40"></div>
+                <video :src="attachment.url" class=" "> </video>
+            </div>
             <div class="py-32 items-center flex flex-col justify-center" v-else>
                 <PaperClipIcon class="w-12 h-12" />
                 <small> {{ attachment.name }}</small>
@@ -32,8 +37,8 @@
     </template>
     </template>
     <script setup>
-    import { isImage } from "@/helper";
-    import { ArrowDownTrayIcon, PaperClipIcon } from "@heroicons/vue/24/outline";
+    import { isImage, isVideo } from "@/helper";
+    import { ArrowDownTrayIcon,PlayCircleIcon, PaperClipIcon } from "@heroicons/vue/24/outline";
      const props = defineProps({
         attachments: Array,
     });

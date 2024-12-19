@@ -57,9 +57,10 @@
                                             :src="attachment.url"
                                             class="max-w-full max-h-full"
                                         />
-                                        <!-- <div v-else-if="isVideo(attachment)" class="flex items-center">
+                                        
+                                        <div v-else-if="isVideo(attachment)" class="flex items-center">
                                             <video :src="attachment.url" controls autoplay></video>
-                                        </div> -->
+                                        </div>
                                         <div
                                             v-else
                                             class="p-32 flex flex-col justify-center items-center text-gray-100"
@@ -95,7 +96,7 @@ import {
     ChevronLeftIcon,
     PaperClipIcon,
 } from "@heroicons/vue/24/outline";
-import { isImage } from "@/helper";
+import { isImage ,isVideo} from "@/helper";
 
 const props = defineProps({
     modelValue: {

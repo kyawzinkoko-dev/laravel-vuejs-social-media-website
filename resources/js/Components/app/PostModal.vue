@@ -140,6 +140,7 @@
                                                             : '',
                                                     ]"
                                                 />
+                                                
                                                 <div
                                                     v-else
                                                     class="flex justify-center items-center flex-col"
@@ -318,6 +319,11 @@ function closeModal() {
     resetModal();
     emit("hide");
 }
+//clear the old error message 
+const clearError = () =>{
+    console.log('clear eror calld')
+     attachmentError=[]
+}
 //instance form value
 const form = useForm({
     id: "",
@@ -423,6 +429,7 @@ function resetMyFile(myFile) {
         form.delete_file_ids.push(myFile.id);
         myFile.deleted = true;
     }
+    attachmentError.value=[]
 }
 
 //undo seleted file that are to be delete
