@@ -35,7 +35,7 @@ class HomeController extends Controller
                     ->orWhereNotNull('gu.group_id');
             })
             ->whereNot('posts.user_id', $userId)
-            ->paginate(10);
+            ->paginate(2);
         //dd($posts);
         $group = Group::query()
             ->with('currentUserGroup')

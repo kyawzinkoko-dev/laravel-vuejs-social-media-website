@@ -33,14 +33,7 @@ watch(
     },
     { deep: true, immediate: true }
 );
-// watch(() => page.props.posts, () => {
-//     if (page.props.posts) {
-//         allPosts.value = {
-//             data: page.props.posts.data,
-//             next: page.props.posts.links?.next
-//         }
-//     }
-// }, {deep: true, immediate: true})
+
 const openEditModal = (post) => {
     editPost.value = post;
     console.log(editPost)
@@ -64,6 +57,7 @@ const onModalHide = () => {
     };
 };
 function loadMore() {
+    console.log(allPost)
     if (!allPost.value.next) {
         return;
     }
@@ -75,11 +69,12 @@ function loadMore() {
 }
 onMounted(() => {
     console.log('load more triggered')
+    const rootMargin = window.innerWidth < 1024 ? "-255px 0px 0px 0px" : "-500px 0px 0px 0px";
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => entry.isIntersecting && loadMore());
         },
-        { rootMargin: "-255px 0px 0px 0px" }
+        { rootMargin }
     );
     observer.observe(loadMoreInterset.value);
 });

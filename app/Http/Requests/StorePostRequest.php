@@ -70,11 +70,12 @@ class StorePostRequest extends FormRequest
             'group_id' => ['nullable', 'exists:groups,id', function ($attribute, $value, \Closure $fail) {
                 /** @var $groupUser,  */
                 $groupUser = GroupUser::where('user_id', Auth::id())
-                ->where('group_id', $value)
-                ->where('status',GroupUserStatus::APPROVED->value)
-                ->exists();
-                if(!$groupUser){
-                    $fail("You don't have permission to create post ");
+                    ->where('group_id', $value)
+                    ->where('status', GroupUserStatus::APPROVED->value)
+                    ->exists();
+                if (!$groupUser) {
+                    $fail("You do
+                    n't have permission to create post ");
                 }
             }]
         ];
@@ -84,7 +85,9 @@ class StorePostRequest extends FormRequest
 
         $this->merge([
             'user_id' => Auth::user()->id,
-            'body' => $this->input('body') ?: ''
+            'body' => preg_replace_callback('/(#\w+)(?![^<]*<\/a>)/', function ($a) {
+                return '<a href="/search/'.urlencode($a[0]).'">'.$a[0].'</a>';
+            }, $this->input('body') ?: '')
         ]);
     }
     public function messages()

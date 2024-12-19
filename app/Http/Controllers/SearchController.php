@@ -32,7 +32,7 @@ class SearchController extends Controller
             return $post;
         }
         return Inertia::render('Search',[
-            'search'=>$search,
+            'search'=>$search ,
             'users' => UserResource::collection($users),
             'posts'=>$post,
             'groups'=>GroupResource::collection($group),

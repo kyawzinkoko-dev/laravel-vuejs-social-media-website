@@ -1,6 +1,6 @@
 <template>
     <AuthenticatedLayout>
-        <div class="grid p-3 grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+        <div  v-if="!search.startsWith('#')"class="grid p-3 grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
             <div class="p-3 bg-white rounded shadow">
                 <h2 class="text-lg font-bold">Users</h2>
                 <div v-if="users.length">
@@ -34,7 +34,7 @@ const props = defineProps({
     users: Array,
     groups: Array,
     posts: Object,
-    search:String
+    search:{type:String,default:null}
 });
 console.log(props)
 </script>

@@ -2,6 +2,166 @@
 @tailwind components;
 @tailwind utilities;
 
-#app{
+#app {
     height: 100%;
+}
+
+.ck-content > blockquote,
+.ck-content > dl,
+.ck-content > dd,
+.ck-content > h1,
+.ck-content > h2,
+.ck-content > h3,
+.ck-content > h4,
+.ck-content > h5,
+.ck-content > h6,
+.ck-content > hr,
+.ck-content > figure,
+.ck-content > p,
+.ck-content > pre {
+    margin: revert;
+}
+
+.ck-content > ol,
+.ck-content > ul {
+    list-style: revert;
+    margin: revert;
+    padding: revert;
+}
+
+.ck-content > table {
+    border-collapse: revert;
+}
+
+.ck-content > h1,
+.ck-content > h2,
+.ck-content > h3,
+.ck-content > h4,
+.ck-content > h5,
+.ck-content > h6 {
+    font-size: revert;
+    font-weight: revert;
+}
+
+.ck-content a {
+    text-decoration: underline;
+    color: #4b9afa;
+}
+
+.ck-content-output > blockquote,
+.ck-content-output > dl,
+.ck-content-output > dd,
+.ck-content-output > h1,
+.ck-content-output > h2,
+.ck-content-output > h3,
+.ck-content-output > h4,
+.ck-content-output > h5,
+.ck-content-output > h6,
+.ck-content-output > hr,
+.ck-content-output > figure,
+.ck-content-output > p,
+.ck-content-output > pre {
+    margin: revert;
+}
+
+.ck-content-output > *:last-child {
+    margin-bottom: 0;
+}
+
+.ck-content-output > ol,
+.ck-content-output > ul {
+    list-style: revert;
+    margin: revert;
+    padding: revert;
+}
+
+.ck-content-output > table {
+    border-collapse: revert;
+}
+
+.ck-content-output > h1,
+.ck-content-output > h2,
+.ck-content-output > h3,
+.ck-content-output > h4,
+.ck-content-output > h5,
+.ck-content-output > h6 {
+    font-size: revert;
+    font-weight: revert;
+}
+
+.ck-content-output blockquote {
+    border-left: 5px solid #ccc;
+    font-style: italic;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.ck-content-output a {
+    text-decoration: #4b9afa;
+    color: blue;
+}
+
+.ck-content-output a.hashtag {
+    background-color: #eaf4ff;
+    color: #4156e2;
+}
+
+/* WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #a2c3de; /* Thumb color */
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f3; /* Track color */
+}
+
+
+html.dark ::-webkit-scrollbar {
+    width: 8px;
+    background-color: transparent;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+    background-color: #031a25; /* Thumb color */
+    border-radius: 6px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background-color: #0a2d3e; /* Track color */
+}
+
+html.dark .ck-reset_all :not(.ck-reset_all-excluded *),
+html.dark .ck.ck-reset_all {
+    color: white;
+}
+
+html.dark .ck.ck-toolbar {
+    background-color: rgb(30, 41, 59);
+}
+
+html.dark .ck.ck-button:not(.ck-disabled):hover,
+html.dark a.ck.ck-button:not(.ck-disabled):hover,
+html.dark .ck.ck-button:not(.ck-disabled):active,
+html.dark a.ck.ck-button:not(.ck-disabled):active,
+html.dark .ck.ck-button.ck-on,
+html.dark a.ck.ck-button.ck-on{
+    background-color: rgb(15, 23, 42);
+}
+
+html.dark .ck.ck-editor__main>.ck-editor__editable {
+    background-color: rgb(30, 41, 59);
+    color: white;
+}
+
+html.dark .ck.ck-list {
+    background-color: rgb(30, 41, 59);
 }
