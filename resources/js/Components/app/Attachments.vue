@@ -10,7 +10,7 @@
             >
                 +{{ attachments.length - 4 }} more
             </div>
-            <!-- download -->
+            <!-- !download -->
             <a
                 @click.stop
                 :href="route('post.download', attachment)"
@@ -18,7 +18,8 @@
             >
                 <ArrowDownTrayIcon class="h-4 w-4 cursor-pointer" />
             </a>
-            <!-- download -->
+            <!--/ download -->
+            <!-- !preview of image and video-->
             <img
                 v-if="isImage(attachment)"
                 :src="attachment.url"

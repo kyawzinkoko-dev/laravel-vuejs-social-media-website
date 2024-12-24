@@ -18,6 +18,8 @@ use App\Notifications\PostCreated;
 use App\Notifications\PostDeleted;
 use App\Notifications\ReactionAddedOnComment;
 use App\Notifications\ReactionAddedOnPost;
+use DOMDocument;
+use DOMElement;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -25,7 +27,6 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use OpenAI\Laravel\Facades\OpenAI;
 
 class PostController extends Controller
 {
@@ -35,7 +36,7 @@ class PostController extends Controller
 
         $allFiles = [];
         $data = $request->validated();
-
+        
         $user = request()->user();
         DB::beginTransaction();
         try {
@@ -279,19 +280,35 @@ class PostController extends Controller
         ]);
     }
 
-    public function aiPostContent(Request $request)
-    {
-        $prompt = $request->get('prompt');
-        $result = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => 'Please generate the social media content base on the following prompt' . PHP_EOL . PHP_EOL . $prompt
-                ],
-            ],
-        ]);
+   public function fetchUrlPreview(Request $req){
+    $data = $req->validate([
+        'url'=>'url'
+    ]);
+    
+    $url = $data['url'];
+    $content = file_get_contents($url);
 
-        echo $result->choices[0]->message->content;
-    }
+    $dom = new \DOMDocument();
+
+        // Suppress warnings for malformed HTML
+        libxml_use_internal_errors(true);
+
+        // Load HTML content into the DOMDocument
+        $dom->loadHTML($content);
+
+        // Suppress warnings for malformed HTML
+        libxml_use_internal_errors(false);
+
+        $ogTags = [];
+        $metaTags = $dom->getElementsByTagName('meta');
+        foreach ($metaTags as $tag ) {
+            $property = $tag->getAttribute('property');
+            if (str_starts_with($property, 'og:')) {
+                $ogTags[$property] = $tag->getAttribute('content');
+            }
+        }
+
+        return  $ogTags;
+   }
+
 }

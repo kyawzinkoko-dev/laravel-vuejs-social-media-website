@@ -61,16 +61,7 @@
                                         <div v-else-if="isVideo(attachment)" class="flex items-center">
                                             <video :src="attachment.url" controls autoplay></video>
                                         </div>
-                                        <div
-                                            v-else
-                                            class="p-32 flex flex-col justify-center items-center text-gray-100"
-                                        >
-                                            <PaperClipIcon
-                                                class="w-10 h-10 mb-3"
-                                            />
-
-                                            <small>{{ attachment.name }}</small>
-                                        </div>
+                                      
                                     </div>
                                 </div>
                             </DialogPanel>

@@ -12,23 +12,22 @@ import EditDeleteDropdown from "./EditDeleteDropdown.vue";
 import CommentList from "./CommentList.vue";
 import Attachments from "./Attachments.vue";
 import { computed } from "vue";
+import UrlPreview from "./UrlPreview.vue";
 const props = defineProps({
     post: Object,
 });
 //console.log(props.post.body)
 const postBody = computed(() => {
-    // Simplified regex for matching hashtags
     let content = props.post.body.replace(
-        /#(\w+)/g,  // Match hashtags
-        (match, group1) => {
-            const encodedGroup = encodeURIComponent(group1);
-            return `<a href="/search/${encodedGroup}" class="hashtag">${match}</a>`;
+        /(?:(\s+)|<p>)((#\w+)(?![^<]*<\/a>))/g,
+        (match, group1, group2) => {
+            const encodedGroup = encodeURIComponent(group2);
+            return `${group1 || ''}<a href="/search/${encodedGroup}" class="hashtag">${group2}</a>`;
         }
-    );
-    console.log(content); // Check the final content after replacement
-    return content;
-});
+    )
 
+    return content;
+})
 const emit = defineEmits(["editClick", "attachmentClick"]);
 const openEditModal = () => {
     emit("editClick", props.post);
@@ -70,6 +69,7 @@ function sendReaction(type) {
         </div>
         <div>
             <ReadMoreReadLess :content="postBody" />
+            <UrlPreview :preview="post.preview" :url="post.preview_url"/>
         </div>
         <!-- Attachment -->
         <div

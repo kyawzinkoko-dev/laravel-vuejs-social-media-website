@@ -45,12 +45,13 @@
                                     </button>
                                 </DialogTitle>
                                 <div class="p-3">
+                                    <!-- !Uesr profile information  -->
                                     <PostHeaderUser
                                         :post="post"
                                         :show-time="false"
                                         class="mb-3"
                                     />
-                                   
+                                    <!-- ! -->
                                     <div
                                         v-if="error.group_id"
                                         class="bg-red-400 text-white py-1 px-3 mb-3 rounded"
@@ -61,8 +62,9 @@
                                         :editor="editor"
                                         v-model="form.body"
                                         :config="editorConfig"
+                                        @input="onInputChange"
                                     ></ckeditor>
-                                 
+                                   <UrlPreview :url="form.preview_url" :preview="form.preview"/>
                                     <div
                                         v-if="showExtansionWarning"
                                         class="py-2 px-2 border-l-4 border-amber-600 bg-amber-100 my-2"
@@ -140,7 +142,7 @@
                                                             : '',
                                                     ]"
                                                 />
-                                                
+
                                                 <div
                                                     v-else
                                                     class="flex justify-center items-center flex-col"
@@ -228,6 +230,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { isImage } from "@/helper.js";
 import { Ckeditor } from "@ckeditor/ckeditor5-vue";
 import axiosClient from "@/axiosClient";
+import UrlPreview from "./UrlPreview.vue";
 const editor = ClassicEditor;
 
 const editorConfig = {
@@ -247,6 +250,19 @@ const editorConfig = {
         "|",
         "blockQuote",
     ],
+    mediaEmbed: {
+        removeProviders: [
+            "instagram",
+            "twitter",
+            "googleMaps",
+            "flickr",
+            "facebook",
+            "dailymotion",
+            "spotify",
+            "youtube",
+            "vimeo",
+        ],
+    },
 };
 const attachmentExtansion = usePage().props.attachmentExtansions;
 
@@ -270,6 +286,8 @@ const props = defineProps({
 const attachmentFiles = ref([]);
 //show type of file extansions that are allowed as a warning if a user chose wrong file type
 const attachmentError = ref([]);
+
+const debounceTimeout = ref()
 
 //the error for total size of selected attachment file
 const error = ref({});
@@ -319,11 +337,11 @@ function closeModal() {
     resetModal();
     emit("hide");
 }
-//clear the old error message 
-const clearError = () =>{
-    console.log('clear eror calld')
-     attachmentError=[]
-}
+//clear the old error message
+const clearError = () => {
+    console.log("clear eror calld");
+    attachmentError = [];
+};
 //instance form value
 const form = useForm({
     id: "",
@@ -331,6 +349,8 @@ const form = useForm({
     group_id: null,
     attachments: [],
     delete_file_ids: [],
+    preview:{},
+    preview_url:null,
     _method: "POST",
 });
 
@@ -353,6 +373,7 @@ const submit = () => {
             },
         });
     } else {
+        console.log(form)
         form.post(route("post.create"), {
             preserveScroll: true,
             onSuccess: () => {
@@ -425,11 +446,11 @@ function resetMyFile(myFile) {
         attachmentFiles.value = attachmentFiles.value.filter(
             (f) => f != myFile
         );
-    } else {
+    } else {        
         form.delete_file_ids.push(myFile.id);
         myFile.deleted = true;
     }
-    attachmentError.value=[]
+    attachmentError.value = [];
 }
 
 //undo seleted file that are to be delete
@@ -438,4 +459,60 @@ function undoDelete(myFile) {
     form.delete_file_ids = form.delete_file_ids.filter((id) => id != myFile.id);
 }
 
+const fetchPreview = (url)=>{
+    if(form.preview_url){
+        return 
+    }
+    form.preview={};
+    form.preview_url=url
+  axiosClient.post(route('post.fetchUrlPreview'),{url})
+    .then(({data})=>{console.log(data);
+        form.preview={
+            title:data['og:title'],
+            description:data['og:description'],
+            image:data['og:image']            
+        }
+        console.log(form)
+    })
+    .catch(e =>console.log(e))
+
+}
+
+// event for checking on inputchange of ckeditor 
+function onInputChange() {
+    let url = matchHref()
+
+    if (!url) {
+        url = matchLink()
+    }
+    fetchPreview(url)
+}
+
+function matchHref() {
+    // Regular expression to match URLs
+    const urlRegex = /<a.+href="((https?):\/\/[^"]+)"/;
+
+    // Match the first URL in the HTML content
+    const match = form.body.match(urlRegex);
+
+    // Check if a match is found
+    if (match && match.length > 0) {
+        return match[1];
+    }
+    return null;
+}
+
+function matchLink() {
+    // Regular expression to match URLs
+    const urlRegex = /(?:https?):\/\/[^\s<]+/;
+
+    // Match the first URL in the HTML content
+    const match = form.body.match(urlRegex);
+
+    // Check if a match is found
+    if (match && match.length > 0) {
+        return match[0];
+    }
+    return null
+}
 </script>

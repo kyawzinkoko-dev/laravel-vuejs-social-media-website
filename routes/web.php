@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
         //commentcreate
         Route::post('/{post}/comment', [PostController::class, 'createComment'])->name('comment.create');
          });
+        //fetch url preview
+        Route::post('/fetch-url-preview',[PostController::class,'fetchUrlPreview'])->name('post.fetchUrlPreview');
     //comment
   Route::prefix('comment')->group(function(){
     Route::delete('/{comment}', [PostController::class, 'deleteComment'])->name('comment.delete');

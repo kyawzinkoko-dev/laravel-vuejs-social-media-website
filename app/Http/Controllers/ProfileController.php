@@ -42,11 +42,13 @@ class ProfileController extends Controller
         $followerCount = Followers::query()->where('user_id',$user->id)->count();
         $posts=Post::postForTimeline($user->id)
         ->where('user_id',$user->id)
+        ->latest()
         ->paginate(2);
         $posts = PostResource::collection($posts);
         if($request->wantsJson()){
             return $posts;
         }
+
         $follower = $user->followers;
 
         $following = $user->followings;

@@ -24,6 +24,7 @@ defineProps({
 watch(
     () => page.props.posts,
     () => {
+        console.log('watch trigger')
         if (page.props.posts) {
             allPost.value = {
                 data: page.props.posts.data,
@@ -69,7 +70,7 @@ function loadMore() {
 }
 onMounted(() => {
     console.log('load more triggered')
-    const rootMargin = window.innerWidth < 1024 ? "-255px 0px 0px 0px" : "-500px 0px 0px 0px";
+    const rootMargin = window.innerWidth < 1024 ? "-255px 0px 0px 0px" : "-200px 0px 0px 0px";
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => entry.isIntersecting && loadMore());

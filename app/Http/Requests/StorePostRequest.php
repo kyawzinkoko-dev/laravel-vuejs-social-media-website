@@ -48,9 +48,11 @@ class StorePostRequest extends FormRequest
      */
     public function rules(): array
     {
-
+        
         return [
             'body' => ['nullable', 'string'],
+            'preview_url'=>['nullable','string'],
+            'preview'=>['nullable','array'],
             'attachments' => [
                 'nullable',
                 'array',
@@ -82,12 +84,20 @@ class StorePostRequest extends FormRequest
     }
     public function prepareForValidation()
     {
-
+    
+        $body=$this->input('body') ?:'';
+        $previewUrl = $this->input('preview_url')?: '';
+        $trimBody =strip_tags(trim($body));
+        dd($trimBody,$previewUrl);
+        if($trimBody ===$previewUrl){
+            $body='';
+        }
+        dd($body);
         $this->merge([
             'user_id' => Auth::user()->id,
             'body' => preg_replace_callback('/(#\w+)(?![^<]*<\/a>)/', function ($a) {
                 return '<a href="/search/'.urlencode($a[0]).'">'.$a[0].'</a>';
-            }, $this->input('body') ?: '')
+            }, $body)
         ]);
     }
     public function messages()
