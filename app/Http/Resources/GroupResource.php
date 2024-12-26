@@ -22,6 +22,7 @@ class GroupResource extends JsonResource
             'about' => $this->about,
             'role' => $this->currentUserGroup?->role,
             'status' => $this->currentUserGroup?->status,
+            'pinned_post_id'=>$this->pinned_post_id,
             'auto_approve' => $this->auto_approve,
             'description' => Str::words(strip_tags($this->about),5),
             'thumbnail_url' => $this->thumbnail_path ? Storage::url($this->thumbnail_path)  : '/img/default_background.jpeg',

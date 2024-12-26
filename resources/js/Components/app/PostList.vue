@@ -70,7 +70,7 @@ function loadMore() {
 }
 onMounted(() => {
     console.log('load more triggered')
-    const rootMargin = window.innerWidth < 1024 ? "-255px 0px 0px 0px" : "-200px 0px 0px 0px";
+    const rootMargin = window.innerWidth < 1024 ? "-255px 0px 0px 0px" : "-100px 0px 0px 0px";
     const observer = new IntersectionObserver(
         (entries) => {
             entries.forEach((entry) => entry.isIntersecting && loadMore());

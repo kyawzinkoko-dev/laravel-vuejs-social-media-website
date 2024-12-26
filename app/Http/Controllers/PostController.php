@@ -36,7 +36,7 @@ class PostController extends Controller
 
         $allFiles = [];
         $data = $request->validated();
-        
+
         $user = request()->user();
         DB::beginTransaction();
         try {
@@ -280,15 +280,16 @@ class PostController extends Controller
         ]);
     }
 
-   public function fetchUrlPreview(Request $req){
-    $data = $req->validate([
-        'url'=>'url'
-    ]);
-    
-    $url = $data['url'];
-    $content = file_get_contents($url);
+    public function fetchUrlPreview(Request $req)
+    {
+        $data = $req->validate([
+            'url' => 'url'
+        ]);
 
-    $dom = new \DOMDocument();
+        $url = $data['url'];
+        $content = file_get_contents($url);
+
+        $dom = new \DOMDocument();
 
         // Suppress warnings for malformed HTML
         libxml_use_internal_errors(true);
@@ -301,7 +302,7 @@ class PostController extends Controller
 
         $ogTags = [];
         $metaTags = $dom->getElementsByTagName('meta');
-        foreach ($metaTags as $tag ) {
+        foreach ($metaTags as $tag) {
             $property = $tag->getAttribute('property');
             if (str_starts_with($property, 'og:')) {
                 $ogTags[$property] = $tag->getAttribute('content');
@@ -309,6 +310,40 @@ class PostController extends Controller
         }
 
         return  $ogTags;
-   }
+    }
+    public function pinUnpinPost(Request $request, Post $post)
+    {
+     $forGroup = $request->get('forGroup',false);
+     $group = $post->group;
+     if($forGroup && !$group){
+        return response('Invalid request',400);
+     }
+     if($forGroup && !$group->isAdmin(Auth::id())){
+        return response('You don\'t have permission to perform this action ',403);
+     }
+     $pinned = false;
+     if($forGroup && $group->isAdmin(Auth::id())){
+        if($group->pinned_post_id){
+            $group->pinned_post_id = null;
+        }
+        else{
+            $pinned=true;
+            $group->pinned_post_id = $post->id;
+        }
+        $group->save();
+     }
+     if(!$forGroup){
+        $user = $request->user();
+        if($user->pinned_post_id){
+            $user->pinned_post_id = null;
+        }
+        else{
+            $pinned=true;
+            $user->pinned_post_id = $post->id;
+        }
+        $user->save();
+     }
+     return back()->with('Post was successfully '.$pinned ? 'pinned' : 'unpinned');
 
+    }
 }

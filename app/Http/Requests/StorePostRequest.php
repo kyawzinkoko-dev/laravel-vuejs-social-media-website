@@ -88,11 +88,11 @@ class StorePostRequest extends FormRequest
         $body=$this->input('body') ?:'';
         $previewUrl = $this->input('preview_url')?: '';
         $trimBody =strip_tags(trim($body));
-        dd($trimBody,$previewUrl);
+        //dd($trimBody,$previewUrl);
         if($trimBody ===$previewUrl){
             $body='';
         }
-        dd($body);
+       // dd($body);
         $this->merge([
             'user_id' => Auth::user()->id,
             'body' => preg_replace_callback('/(#\w+)(?![^<]*<\/a>)/', function ($a) {

@@ -5,7 +5,7 @@ import {
     ChatBubbleBottomCenterIcon,
 } from "@heroicons/vue/24/outline";
 import PostHeaderUser from "./PostHeaderUser.vue";
-import { router, usePage } from "@inertiajs/vue3";
+import { router, useForm, usePage } from "@inertiajs/vue3";
 import axiosClient from "@/axiosClient";
 import ReadMoreReadLess from "../ReadMoreReadLess.vue";
 import EditDeleteDropdown from "./EditDeleteDropdown.vue";
@@ -13,26 +13,37 @@ import CommentList from "./CommentList.vue";
 import Attachments from "./Attachments.vue";
 import { computed } from "vue";
 import UrlPreview from "./UrlPreview.vue";
+import PinIcon from "./PinIcon.vue";
 const props = defineProps({
     post: Object,
 });
-//console.log(props.post.body)
+const group = usePage().props.group? usePage().props.group : null;
+console.log(group);
+const authUser = usePage().props.auth.user;
+const isPinned = computed(() => {
+    if (group?.id) {
+        return group.pinned_post_id === props.post.id;
+    }
+    return authUser.pinned_post_id === props.post.id;
+});
+
 const postBody = computed(() => {
     let content = props.post.body.replace(
         /(?:(\s+)|<p>)((#\w+)(?![^<]*<\/a>))/g,
         (match, group1, group2) => {
             const encodedGroup = encodeURIComponent(group2);
-            return `${group1 || ''}<a href="/search/${encodedGroup}" class="hashtag">${group2}</a>`;
+            return `${
+                group1 || ""
+            }<a href="/search/${encodedGroup}" class="hashtag">${group2}</a>`;
         }
-    )
+    );
 
     return content;
-})
+});
 const emit = defineEmits(["editClick", "attachmentClick"]);
 const openEditModal = () => {
     emit("editClick", props.post);
 };
-
 
 function deletePost() {
     if (window.confirm("Are you sure you want to delete this post?")) {
@@ -57,19 +68,54 @@ function sendReaction(type) {
             props.post.num_of_reactions = data.num_of_reactions;
         });
 }
+function pinUnPinPost() {
+    const form = useForm({
+        forGroup: group?.id,
+    });
+    let isPinned = false;
+    if (group?.id) {
+        isPinned = group?.pinned_post_id === props.post.pinned_post_id;
+    } else {
+        isPinned = authUser.pinned_post_id === props.post.pinned_post_id;
+    }
+    form.post(route("post.pinUnpin", props.post), {
+        preserveScroll: true,
+        onSuccess: () => {
+            if (group?.id) {
+                group.pinned_post_id = isPinned ? null : props.post.id;
+            } else {
+                authUser.pinned_post_id = isPinned ? null : props.post.id;
+            }
+        },
+    });
+}
 </script>
 
 <template>
     <div class="bg-white p-4 rounded border shadow-sm mb-3">
-     
         <div class="flex justify-between items-center mb-3">
             <PostHeaderUser :post="post" />
-
-            <EditDeleteDropdown  :post="post" @edit="openEditModal" @delete="deletePost" />
+            <div class="flex">
+                <div
+                v-if="isPinned"
+                class="flex items-center"
+            >
+        <PinIcon/> Pinned
+       
         </div>
+        <EditDeleteDropdown
+                :post="post"
+                @edit="openEditModal"
+                @delete="deletePost"
+                @pin="pinUnPinPost"
+            />
+            </div>
+           
+        </div>
+        
         <div>
             <ReadMoreReadLess :content="postBody" />
-            <UrlPreview :preview="post.preview" :url="post.preview_url"/>
+            <UrlPreview :preview="post.preview" :url="post.preview_url" />
         </div>
         <!-- Attachment -->
         <div
@@ -78,7 +124,6 @@ function sendReaction(type) {
                 post.attachments?.length === 1 ? 'grid-cols-1' : 'grid-cols-2',
             ]"
         >
-       
             <Attachments
                 :attachments="post.attachments"
                 @attachmentClick="openAtachment"
@@ -86,8 +131,8 @@ function sendReaction(type) {
         </div>
         <!--like dislike comment-->
 
-        <Disclosure v-slot="{ open }" class="" as="div">
-            <div class="flex items-center gap-4 justify-between">
+        <Disclosure v-slot="{ open }" class=" transition-all" as="div">
+            <div class="transition-all flex items-center gap-4 justify-between">
                 <button
                     @click.prevent="sendReaction('like')"
                     class="flex justify-center text-gray-800 flex-1 items-center gap-1 py-2 px-4 bg-gray-100 rounded-lg hover:bg-gray-200"
@@ -112,10 +157,9 @@ function sendReaction(type) {
                     Comment
                 </DisclosureButton>
             </div>
-          
+
             <DisclosurePanel
-                class="px-4 max-h-80 pb-2  pt-4 text-sm text-gray-500 overflow-auto"
-               
+                class="px-4 transition-all max-h-80 pb-2 pt-4 text-sm text-gray-500 overflow-auto"
             >
                 <CommentList
                     :post="post"

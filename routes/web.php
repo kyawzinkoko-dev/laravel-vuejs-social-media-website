@@ -59,7 +59,9 @@ Route::middleware('auth')->group(function () {
 
         //commentcreate
         Route::post('/{post}/comment', [PostController::class, 'createComment'])->name('comment.create');
-         });
+        //pin post
+        Route::post('/{post}/pin',[PostController::class,'pinUnpinPost'])->name('post.pinUnpin');
+    });
         //fetch url preview
         Route::post('/fetch-url-preview',[PostController::class,'fetchUrlPreview'])->name('post.fetchUrlPreview');
     //comment

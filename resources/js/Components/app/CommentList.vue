@@ -44,6 +44,8 @@
                     </div>
                 </div>
                 <EditDeleteDropdown
+                    class="z-50"
+                   
                     :post="post"
                     :comment="comment"
                     @edit="startCommentEdit(comment)"
@@ -134,7 +136,7 @@ import {
     ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/vue/24/outline";
 import ReadMoreReadLess from "../ReadMoreReadLess.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import {  usePage } from "@inertiajs/vue3";
 import axiosClient from "@/axiosClient";
 import axios from "axios";
@@ -163,7 +165,9 @@ function onCommentCreate() {
         emit("createComment");
     }
 }
-
+const group = computed(()=>{
+    return usePage().props.group ? usePage().props.group : null
+})
 function onDeleteComment() {
     if (props.parentComment) {
         props.parentComment.num_of_comments--;

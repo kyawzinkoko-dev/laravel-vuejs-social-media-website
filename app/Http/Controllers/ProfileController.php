@@ -40,11 +40,16 @@ class ProfileController extends Controller
             }
         }
         $followerCount = Followers::query()->where('user_id',$user->id)->count();
-        $posts=Post::postForTimeline($user->id)
+        $posts=Post::postForTimeline($user->id,false)
+        ->leftJoin('users as u','u.pinned_post_id','posts.id')
         ->where('user_id',$user->id)
-        ->latest()
-        ->paginate(2);
+        ->whereNull('group_id')
+        ->orderBy('pinned_post_id','desc')
+        ->orderBy('posts.created_at','desc')
+        
+        ->paginate(20);
         $posts = PostResource::collection($posts);
+       // dd($posts);
         if($request->wantsJson()){
             return $posts;
         }

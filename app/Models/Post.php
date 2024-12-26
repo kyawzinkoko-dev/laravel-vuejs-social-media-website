@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ *       class Post
+ * 
+ * @property Group $group
+ */
 class Post extends Model
 {
     use HasFactory;
@@ -44,9 +49,10 @@ class Post extends Model
     public function isOwner($userId){
         return $this->user_id ==$userId;
     }
-    public static function postForTimeline($userId): Builder
+    public static function postForTimeline($userId,$getLatest=true): Builder
     {
-        return Post::query()
+         
+        $query = Post::query()
             ->withCount('reactions')
             ->with([
                 'comments' => function ($query) {
@@ -55,7 +61,11 @@ class Post extends Model
                 'reactions' => function ($query) use ($userId) {
                     $query->where('user_id', $userId);
                 }
-            ])
-            ->latest();
-    }
+            ]);
+            if($getLatest){
+                $query->latest();
+            }
+            return $query;
+        }
+    
 }
