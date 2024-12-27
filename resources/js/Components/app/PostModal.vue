@@ -337,11 +337,7 @@ function closeModal() {
     resetModal();
     emit("hide");
 }
-//clear the old error message
-const clearError = () => {
-    console.log("clear eror calld");
-    attachmentError = [];
-};
+
 //instance form value
 const form = useForm({
     id: "",
