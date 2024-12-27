@@ -198,7 +198,7 @@
                         </TabPanel>
                         <TabPanel
                             v-if="isCurrentUserAdmin"
-                            class="bg-white p-3 shadow"
+                            class="bg-white dark:bg-gray-800 dark:text-gray-300 p-3 shadow"
                         >
                             <div v-if="pendingUsers.length">
                                 <div class="grid gap-3 grid-cols-2">
@@ -220,10 +220,10 @@
                                 <h3>Don't have any request</h3>
                             </div>
                         </TabPanel>
-                        <TabPanel class="bg-white p-3 shadow">
+                        <TabPanel class="bg-white dark:bg-gray-800 dark:text-gray-300 p-3 shadow">
                            <GroupTabPhotos :photos="photos"/>
                         </TabPanel>
-                        <TabPanel class="bg-white p-3 shadow">
+                        <TabPanel class="bg-white p-3 shadow dark:bg-gray-800 dark:text-gray-300">
                             <div v-if="isCurrentUserAdmin" class="m-4">
                                 <GroupForm :form="groupForm" />
                                 <div  class="flex justify-end my-3">

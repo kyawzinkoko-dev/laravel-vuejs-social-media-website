@@ -52,7 +52,7 @@ onMounted(() => {
 </script>
 <template>
     <textarea
-        class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm placeholder:text-gray-400"
+        class="border-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm placeholder:text-gray-400"
         :value="modelValue"
         @input="onInputChange"
         :placeholder="placeholder"

@@ -43,9 +43,9 @@
                         </div>
                     </div>
                 </div>
-                <EditDeleteDropdown
+                <CommentEditDeleteDropdown
                     class="z-50"
-                   
+                   v-if="comment.user_id ===authUser.id"
                     :post="post"
                     :comment="comment"
                     @edit="startCommentEdit(comment)"
@@ -85,8 +85,8 @@
                         <button
                             :class="[
                                 comment.current_user_has_reaction
-                                    ? 'bg-indigo-50 hover:bg-indigo-100'
-                                    : 'hover:bg-indigo-100',
+                                    ? 'bg-indigo-50 dark:bg-indigo-800 dark:hover:bg-indigo-900 hover:bg-indigo-100'
+                                    : 'hover:bg-indigo-100 dark:hover:bg-indigo-800',
                             ]"
                             class="flex items-center hover:bg-indigo-200 py-0.5 px-1 rounded gap-1 text-indigo-500"
                             @click="sendCommentReaction(comment)"
@@ -102,7 +102,7 @@
 
                         <DisclosureButton>
                             <button
-                                class="flex items-center gap-1 py-0.5 px-1 rounded hover:bg-indigo-100 text-indigo-500"
+                                class="flex items-center gap-1 py-0.5 px-1 rounded hover:bg-indigo-100 dark:hover:bg-indigo-900  text-indigo-500"
                             >
                                 <ChatBubbleLeftEllipsisIcon class="w-3 h-3" />
                                 {{ comment.num_of_comments }}
@@ -140,6 +140,7 @@ import { computed, ref } from "vue";
 import {  usePage } from "@inertiajs/vue3";
 import axiosClient from "@/axiosClient";
 import axios from "axios";
+import CommentEditDeleteDropdown from "./CommentEditDeleteDropdown.vue";
 
 const newComment = ref("");
 const editingComment = ref({});
