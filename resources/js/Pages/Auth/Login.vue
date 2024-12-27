@@ -94,6 +94,10 @@ const submit = () => {
                 >
                     Log in
                 </PrimaryButton>
+                
+            </div>
+            <div  class="flex justify-end items-center mt-4">
+                <span class="text-gray-500 mr-5">OR</span><Link :href="route('register')" class="text-gray-500 underline">Create an account </Link>
             </div>
         </form>
     </GuestLayout>
