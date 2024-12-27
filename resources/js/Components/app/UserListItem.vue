@@ -1,6 +1,6 @@
 <template>
     <div
-        class="flex transition-all border-2 shadow hover:bg-gray-50 border-transparent hover:border-indigo-500 items-center gap-3 bg-white py-2 px-3 rounded-md"
+        class="flex transition-all border-2 shadow hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 border-transparent hover:border-indigo-500 items-center gap-3 bg-white py-2 px-3 rounded-md"
     >
         <Link :href="route('profile', user.username)">
             <img

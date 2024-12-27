@@ -1,13 +1,13 @@
 <template>
     <div
-        class="bg-white rounded border py-3 px-3 lg:h-full flex flex-col overflow-auto"
+        class="bg-white dark:bg-gray-800 text-gray-900 dark:tex-gray-300 dark:border-gray-500 rounded border py-3 px-3 lg:h-full flex flex-col overflow-auto"
     >
         <div class="flex-1 block lg:hidden">
             <Disclosure v-slot="{ open }">
                 <DisclosureButton class="w-full">
                     <div class="flex justify-between items-center">
                         <h2
-                            class="text-2xl font-bold flex items-center justify-center"
+                            class="text-2xl font-bold flex items-center justify-center text-gray-900 dark:text-gray-300"
                         >
                             My Following
                         </h2>
@@ -39,7 +39,7 @@
             </Disclosure>
         </div>
         <div class="flex-col hidden lg:flex overflow-hidden">
-            <h2 class="text-2xl font-bold flex items-center justify-center">
+            <h2 class="text-2xl font-bold flex items-center justify-center text-gray-900 dark:text-gray-300">
                 My Following
             </h2>
             <FollowingListItem :followings="followings" />

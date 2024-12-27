@@ -2,7 +2,7 @@
     <Head title="Group" />
     <AuthenticatedLayout>
         <div
-            class="w-[768px] container mx-auto bg-gray-100 h-full overflow-auto"
+            class="w-[768px] container mx-auto bg-gray-100 dark:bg-gray-700 dark:text-gray-300 h-full overflow-auto"
         >
             <div
                 v-show="showNotification && success"
@@ -10,7 +10,7 @@
             >
                 {{ success }}
             </div>
-            <div class="relative bg-white group">
+            <div class="relative bg-white group dark:bg-gray-800">
                 <img
                     :src="
                         coverImageSrc ||
@@ -128,7 +128,7 @@
 
             <div class="">
                 <TabGroup>
-                    <TabList class="flex bg-white">
+                    <TabList class="flex bg-white dark:bg-gray-800">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected" />
                         </Tab>

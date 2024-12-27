@@ -2,7 +2,7 @@
     <Head title="Profile" />
     <AuthenticatedLayout>
         <div
-            class="w-[768px] container mx-auto bg-gray-100 h-full overflow-auto"
+            class="w-[768px] container mx-auto bg-gray-100 dark:bg-gray-700 dark:text-gray-400 text-black h-full overflow-auto"
         >
             <div
                 v-show="showNotification && success"
@@ -16,7 +16,7 @@
             >
                 {{ errors.cover }}
             </div>
-            <div class="relative bg-white group">
+            <div class="relative bg-white dark:bg-gray-800 dark:text-gray-300 group">
                 <img
                     :src="
                         coverImageSrc ||
@@ -144,7 +144,7 @@
 
             <div class="">
                 <TabGroup>
-                    <TabList class="flex bg-white">
+                    <TabList class="flex bg-white dark:bg-gray-800 dark:text-gray-300">
                         <Tab v-slot="{ selected }" as="template">
                             <TabItem text="Posts" :selected="selected" />
                         </Tab>
@@ -188,7 +188,7 @@
                                     v-model="searchFollowersKeyword"
                                 />
                             </div>
-                            <div v-else class="py-4 text-center">
+                            <div v-else class="py-4 text-center text-gray-900 dark:text-gray-300">
                                 User doesn't have any follower
                             </div>
                         </TabPanel>
@@ -208,7 +208,7 @@
                                     :user="following"
                                 />
                             </div>
-                            <div v-else class="py-4 text-center">
+                            <div v-else class="py-4 text-center text-gray-900 dark:text-gray-300">
                                 User doesn't have any following
                             </div>
                         </TabPanel>

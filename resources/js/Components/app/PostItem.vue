@@ -92,7 +92,7 @@ function pinUnPinPost() {
 </script>
 
 <template>
-    <div class="bg-white p-4 rounded border shadow-sm mb-3">
+    <div class="bg-white dark:bg-gray-800 p-4 rounded border dark:border-gray-800 text-gray-900 dark:text-gray-300 shadow-sm mb-3">
         <div class="flex justify-between items-center mb-3">
             <PostHeaderUser :post="post" />
             <div class="flex">
@@ -135,10 +135,10 @@ function pinUnPinPost() {
             <div class="transition-all flex items-center gap-4 justify-between">
                 <button
                     @click.prevent="sendReaction('like')"
-                    class="flex justify-center text-gray-800 flex-1 items-center gap-1 py-2 px-4 bg-gray-100 rounded-lg hover:bg-gray-200"
+                    class="flex justify-center text-gray-800 dark:bg-gray-700 dark:text-gray-300 shadow flex-1 items-center gap-1 py-2 px-4 bg-gray-100 rounded-lg hover:bg-gray-200"
                     :class="[
                         post.current_user_has_reaction
-                            ? 'bg-sky-100 hover:bg-sky-200'
+                            ? 'bg-sky-100 dark:bg-sky-800 hover:bg-sky-200'
                             : 'bg-gray-100 hover:bg-gray-200',
                     ]"
                 >
@@ -150,7 +150,7 @@ function pinUnPinPost() {
                 </button>
 
                 <DisclosureButton
-                    class="flex justify-center items-center flex-1 px-4 py-2 rounded-lg bg-gray-100 hover:bg-gray-200"
+                    class="flex justify-center items-center flex-1 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-gray-300 hover:bg-gray-200"
                 >
                     <ChatBubbleBottomCenterIcon class="w-6 h-6" />
                     <span class="mr-2">{{ post.num_of_comments }}</span>

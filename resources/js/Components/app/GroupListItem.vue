@@ -7,7 +7,7 @@
              <div class="overflow-auto flex-1 lg:h-full h-[200px]">
                  <div
                      v-if="false"
-                     class="text-gray-400 mt-3 flex justify-center items-center"
+                     class="text-gray-900 dark:text-gray-300 mt-3 flex justify-center items-center "
                  >
                      You are not join to any group
                  </div>

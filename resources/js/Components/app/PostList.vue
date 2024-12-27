@@ -81,7 +81,7 @@ onMounted(() => {
 });
 </script>
 <template>
-    <div class="overflow-auto ">
+    <div class="overflow-auto  ">
         <PostItem
             v-for="post of allPost.data"
             :key="post.id"

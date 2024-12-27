@@ -3,7 +3,7 @@
         fill="rgb(0 0 0 / 0.5)"
         height="16px"
         width="16px"
-        class="text-black/50 mr-2"
+        class="text-black/50 dark:text-gray-300 mr-2"
         version="1.1"
         id="Capa_1"
         xmlns="http://www.w3.org/2000/svg"

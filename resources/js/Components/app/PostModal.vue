@@ -28,11 +28,11 @@
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="w-full max-w-md transform overflow-hidden rounded bg-white text-left align-middle shadow-xl transition-all"
+                                class="w-full max-w-md transform overflow-hidden rounded bg-white dark:text-gray-300 dark:bg-gray-800 text-left align-middle shadow-xl transition-all"
                             >
                                 <DialogTitle
                                     as="h3"
-                                    class="bg-gray-200 font-medium leading-6 text-gray-900 py-3 px-4 flex items-center justify-between"
+                                    class="bg-gray-200 font-medium dark:bg-gray-700 dark:text-gray-300 leading-6 text-gray-900 py-3 px-4 flex items-center justify-between"
                                 >
                                     {{
                                         post.id ? "Update Post" : "Create Post"

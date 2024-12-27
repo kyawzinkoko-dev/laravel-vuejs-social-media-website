@@ -20,11 +20,11 @@ function showCreatePostModal() {
 </script>
 
 <template>
-    <div class="py-6 bg-white px-3 mb-5 rounded cursor-pointer">
+    <div class="py-6 bg-white dark:bg-gray-800 px-3 mb-5 rounded cursor-pointer">
         <div
             @click="showCreatePostModal"
             placeholder="Create New Post"
-            class="py-2 px-3 border-2 border-gray-300 text-gray-500 rounded text-lg focus:ring-violet-500 w-full mb-4"
+            class="py-2 px-3 border-2 border-gray-300 text-gray-500 dark:border-gray-700 rounded text-lg focus:ring-violet-500 w-full mb-4"
         >
             Click to create post
         </div>

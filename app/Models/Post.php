@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder ;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,8 +19,8 @@ class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
-    protected $fillable = ['body', 'user_id','group_id','preview','preview_url'];
-    protected $casts = ['preview'=>'json'];
+    protected $fillable = ['body', 'user_id', 'group_id', 'preview', 'preview_url'];
+    protected $casts = ['preview' => 'json'];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -46,15 +46,19 @@ class Post extends Model
         return $this->hasMany(Comment::class)->latest()->limit(5);
     }
 
-    public function isOwner($userId){
-        return $this->user_id ==$userId;
-    }
-    public static function postForTimeline($userId,$getLatest=true): Builder
+    public function isOwner($userId)
     {
-         
+        return $this->user_id == $userId;
+    }
+    public static function postForTimeline($userId, $getLatest = true): Builder
+    {
+
         $query = Post::query()
             ->withCount('reactions')
             ->with([
+                'user',
+                'group',
+                'attachments',
                 'comments' => function ($query) {
                     $query->withCount('reactions');
                 },
@@ -62,10 +66,9 @@ class Post extends Model
                     $query->where('user_id', $userId);
                 }
             ]);
-            if($getLatest){
-                $query->latest();
-            }
-            return $query;
+        if ($getLatest) {
+            $query->latest();
         }
-    
+        return $query;
+    }
 }

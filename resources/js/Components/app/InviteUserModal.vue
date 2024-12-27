@@ -27,16 +27,16 @@
                             leave-to="opacity-0 scale-95"
                         >
                             <DialogPanel
-                                class="w-full max-w-md transform overflow-hidden rounded bg-white text-left align-middle shadow-xl transition-all"
+                                class="w-full max-w-md transform overflow-hidden rounded bg-white dark:text-gray-300 dark:bg-gray-800 text-left align-middle shadow-xl transition-all"
                             >
                                 <DialogTitle
                                     as="h3"
-                                    class="bg-gray-200 font-medium leading-6 text-gray-900 py-3 px-4 flex items-center justify-between"
+                                    class="bg-gray-200 font-medium leading-6 text-gray-900 dark:bg-gray-700 dark:text-gray-300 py-3 px-4 flex items-center justify-between"
                                 >
                                     Invite User
                                     <button
                                         @click="closeModal"
-                                        class="rounded-full p-2 hover:bg-gray-400"
+                                        class="rounded-full p-2 hover:bg-gray-400 dark:hover:bg-gray-800"
                                     >
                                         <XMarkIcon class="w-4 h-4" />
                                     </button>
@@ -59,7 +59,7 @@
                                     >
                                         <button
                                         @click="closeModal"
-                                            class="flex items-center bg-gray-200 py-2 px-3 rounded gap-1 text-sm"
+                                            class="flex items-center bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-900 transition-colors py-2 px-3 rounded gap-1 text-sm"
                                         >
                                             <XMarkIcon class="h4 w-4" /> Cancel
                                         </button>

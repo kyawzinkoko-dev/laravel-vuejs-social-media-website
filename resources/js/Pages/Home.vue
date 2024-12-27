@@ -2,14 +2,14 @@
 
     <Head title="Posts" />
     <AuthenticatedLayout>
-        <div class="grid lg:grid-cols-12 col-span-1 gap-3 p-4 h-full">
-            <div class="lg:col-span-3  lg:order-1 h-full overflow-hidden">
+        <div class="grid lg:grid-cols-12 col-span-1 gap-3 dark:bg-gray-700 p-4 h-full">
+            <div class="lg:col-span-3 dark:bg-gray-700  lg:order-1 h-full overflow-hidden">
                 <GroupList :groups="groups" />
             </div>
             <div class="lg:col-span-3 gap-6 lg:order-3 h-full overflow-auto">
                 <FriendItem :followings = "followings" />
             </div>
-            <div class="lg:col-span-6 lg:order-2 h-full overflow-hidden flex flex-col">
+            <div class="lg:col-span-6 dark:bg-gray-700 lg:order-2 h-full overflow-hidden flex flex-col">
                <CreatePost />
                 <PostList :posts="posts.data" class="flex-1" />
             </div>

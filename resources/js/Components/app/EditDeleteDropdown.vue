@@ -14,22 +14,22 @@
                 leave-to-class="transform scale-95 opacity-0"
             >
                 <MenuItems
-                    class="absolute right-0 mt-2 z-30 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                    class="absolute right-0 mt-2 z-30 w-56 origin-top-right divide-y divide-gray-100 rounded-md dark:bg-gray-900 text-gray-900 dark:text-gray-300 bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                 >
-                    <div class="py-2 px-1">
+                    <div class="py-2 px-1  text-gray-900">
                         <MenuItem v-slot="{ active }">
                             <a
                                 :href="route('post.view', post)"
                                 :class="[
                                     active
                                         ? 'bg-indigo-500 text-white'
-                                        : 'text-gray-800',
+                                        : 'text-gray-800 dark:text-gray-300',
                                     'flex items-center rounded w-full p-2 text-sm',
                                 ]"
                             >
                                 <EyeIcon
                                     aria-hidden="true"
-                                    class="w-5 h-5 text-black/50 mr-2"
+                                    class="w-5 h-5 text-black/50 dark:text-gray-300 mr-2"
                                 />
                                 View Post
                             </a>
@@ -40,13 +40,13 @@
                                 :class="[
                                     active
                                         ? 'bg-indigo-500 text-white'
-                                        : 'text-gray-800',
+                                        : 'text-gray-800 dark:text-gray-300',
                                     'flex items-center rounded w-full p-2 text-sm',
                                 ]"
                             >
                                 <ClipboardIcon
                                     aria-hidden="true"
-                                    class="w-5 h-5 text-black/50 mr-2"
+                                    class="w-5 h-5 text-black/50 dark:text-gray-300 mr-2"
                                 />
                                 Copy Post Url
                             </button>
@@ -57,13 +57,13 @@
                                 :class="[
                                     active
                                         ? 'bg-indigo-500 text-white'
-                                        : 'text-gray-800',
+                                        : 'text-gray-800 dark:text-gray-300',
                                     'flex items-center rounded w-full p-2 text-sm',
                                 ]"
                             >
                                 <PencilIcon
                                     aria-hidden="true"
-                                    class="w-5 h-5 text-black/50 mr-2"
+                                    class="w-5 h-5 text-black/50 mr-2 dark:text-gray-300"
                                 />
                                 Edit
                             </button>
@@ -74,11 +74,11 @@
                                 :class="[
                                     active
                                         ? 'bg-indigo-500 text-white'
-                                        : 'text-gray-800',
+                                        : 'text-gray-800 dark:text-gray-300',
                                     'flex items-center rounded w-full p-2 text-sm',
                                 ]"
                             >
-                             <PinIcon/>   
+                             <PinIcon class="dark:text-gray-300"/>   
                                 {{ isPinned? 'Unpin' : 'Pin' }}
                             </button>
                         </MenuItem>
@@ -88,13 +88,13 @@
                                 :class="[
                                     active
                                         ? 'bg-indigo-500 text-white'
-                                        : 'text-gray-800',
+                                        : 'text-gray-800 dark:text-gray-300',
                                     'flex items-center rounded w-full p-2 text-sm',
                                 ]"
                             >
                                 <TrashIcon
                                     aria-hidden="true"
-                                    class="w-5 h-5 text-black/50 mr-2"
+                                    class="w-5 h-5 text-black/50 dark:text-gray-300 mr-2"
                                 />
                                 Delete
                             </button>

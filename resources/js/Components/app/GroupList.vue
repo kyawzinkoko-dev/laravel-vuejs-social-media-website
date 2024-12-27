@@ -1,13 +1,13 @@
 <template>
     <div
-        class="bg-white rounded border py-3 px-3 lg:h-full flex flex-col overflow-auto"
+        class="bg-white dark:bg-gray-800 dark:border-gray-500 dark:text-gray-400 rounded border py-3 px-3 lg:h-full flex flex-col overflow-auto"
     >
         <div class="flex-1 block lg:hidden h-[200px]">
             <Disclosure v-slot="{ open }">
                 <DisclosureButton class="w-full">
                     <div class="flex justify-between items-center">
                         <h2
-                            class="text-2xl font-bold flex items-center justify-center"
+                            class="text-2xl font-bold flex items-center justify-center text-gray-900 dark:text-gray-300"
                         >
                             My Groups
                         </h2>
