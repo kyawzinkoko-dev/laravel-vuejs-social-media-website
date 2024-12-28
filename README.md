@@ -4,7 +4,7 @@ Laravel Social Media Website built with Inertia Vue.js.
 
 #### 1. Clone the project
 ```bash
-git clone https://github.com/thecodeholic/laravel-social-media-website.git
+https://github.com/kyawzinkoko-dev/laravel-vuejs-social-media-website
 ```
 
 #### 2. Run `composer install`
